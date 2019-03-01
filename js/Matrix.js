@@ -1,3 +1,6 @@
+const LEFT_ROTATION_ANGLE = "left";
+const RIGHT_ROTATION_ANGLE = "right";
+
 class Matrix{
 
     constructor(tab){
@@ -43,5 +46,25 @@ class Matrix{
     }
 }
 
-const LEFT_ROTATION_ANGLE = "left";
-const RIGHT_ROTATION_ANGLE = "right";
+
+const TETROMINOS_MATRIX_I = new Matrix([  [0, 0, 1, 0],
+                                        [0, 0, 1, 0],
+                                        [0, 0, 1, 0],
+                                        [0, 0, 1, 0]]);
+const TETROMINOS_MATRIX_J = new Matrix([  [0, 1, 0],
+                                        [0, 1, 0],
+                                        [1, 1, 0]]);
+const TETROMINOS_MATRIX_L = new Matrix([  [0, 1, 0],
+                                        [0, 1, 0],
+                                        [0, 1, 1]]);
+const TETROMINOS_MATRIX_S = new Matrix([  [0, 0, 0],
+                                        [0, 1, 1],
+                                        [1, 1, 0]]);
+const TETROMINOS_MATRIX_Z = new Matrix([  [0, 0, 0],
+                                        [1, 1, 0],
+                                        [0, 1, 1]]);
+const TETROMINOS_MATRIX_T = new Matrix([  [0, 0, 0],
+                                        [1, 1, 1],
+                                        [0, 1, 0]]);
+const TETROMINOS_MATRIX_O = new Matrix([  [1, 1],
+                                        [1, 1]]);

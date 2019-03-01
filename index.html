@@ -3,11 +3,16 @@
     <head>
     	<meta charset="utf-8">
     	<title>Tetris Batiment K</title>
-    	<link href="img/icone.png" rel="icon" type="image/x-icon" />
+    	<link href="res/background/icon.png" rel="icon" type="image/x-icon" />
     	<link rel="stylesheet" type="text/css" href="style/main.css">
+        <script src="js/Resources.js" defer></script>
         <script src="js/Matrix.js" defer></script>
     	<script src="js/Tetrominos.js" defer></script>
+        <script src="js/Voxel.js" defer></script>
+        <script src="js/Controller.js" defer></script>
     </head>
     <body>
+        <canvas id="tetris_falling", width="320", height="640"></canvas>
+        <canvas id="tetris_canvas", width="320", height="640"></canvas>
     </body>
 </html>
