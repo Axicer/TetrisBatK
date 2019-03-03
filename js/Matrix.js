@@ -68,3 +68,11 @@ const TETROMINOS_MATRIX_T = new Matrix([  [0, 0, 0],
                                         [0, 1, 0]]);
 const TETROMINOS_MATRIX_O = new Matrix([  [1, 1],
                                         [1, 1]]);
+
+const TETROMINOS_MATRICES = [TETROMINOS_MATRIX_I,
+                                TETROMINOS_MATRIX_J,
+                                TETROMINOS_MATRIX_L,
+                                TETROMINOS_MATRIX_S,
+                                TETROMINOS_MATRIX_Z,
+                                TETROMINOS_MATRIX_T,
+                                TETROMINOS_MATRIX_O];

@@ -6,9 +6,48 @@ class Tetrominos{
     /**
     *   Create the Tetrominos with his patter and a position
     */
-    constructor(matrix, x = 0, y = 0){
-        this.matrix = matrix
-        this.location = [x, y];
+    constructor(voxel){
+        this.voxel = voxel;
+        this.reset();
+        this.gravityInterval = setInterval((function(self){
+            return function(){
+                //apply gravity
+                self.gravity();
+                //check for fix later
+                setTimeout((function(self){
+                    return function(){
+                        self.checkFix();
+                    }
+                })(self), 500);
+            }
+        })(this), 800);
+    }
+
+    reset(){
+        this.matrix = TETROMINOS_MATRICES[parseInt(Math.random()*TETROMINOS_MATRICES.length)];
+        this.tile = RED_TILE;
+        this.location = [parseInt(this.voxel.width/2)-2, 0];
+    }
+
+    gravity(){
+        this.move(0, 1);
+    }
+
+    checkFix(){
+        for(var y = 0 ; y < this.matrix.tab.length ; y++){
+            for(var x = 0 ; x < this.matrix.tab[y].length ; x++){
+                if(this.matrix.tab[y][x] == 1){
+                    if(this.location[1]+y+1 >= this.voxel.height ||
+                        this.voxel.get(this.location[0]+x, this.location[1]+y+1) != null){
+                        //attach the tetrominos to the voxel
+                        this.attach();
+                        //reset tetrominos
+                        this.reset();
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -29,7 +68,17 @@ class Tetrominos{
                 if(this.matrix.tab[y][x] == 1){
                     var coordX = (this.location[0] + x) * TILE_SIZE;
                     var coordY = (this.location[1] + y) * TILE_SIZE;
-                    ctx.drawImage(RED_TILE, coordX, coordY);
+                    ctx.drawImage(this.tile, coordX, coordY);
+                }
+            }
+        }
+    }
+
+    attach(){
+        for(var y = 0 ; y < this.matrix.tab.length ; y++){
+            for(var x = 0 ; x < this.matrix.tab[y].length ; x++){
+                if(this.matrix.tab[y][x] == 1){
+                    this.voxel.set(this.location[0]+x, this.location[1]+y, this.tile);
                 }
             }
         }
@@ -41,6 +90,18 @@ class Tetrominos{
     rotateLeft(){
         //TODO check for enough space from the voxel
         this.matrix.rotateCounterClockwise();
+        for(var y = 0 ; y < this.matrix.tab.length ; y++){
+            for(var x = 0 ; x < this.matrix.tab[y].length ; x++){
+                if(this.matrix.tab[y][x] == 1){
+                    var coordX = this.location[0] + x;
+                    var coordY = this.location[1] + y;
+                    if(!this.voxel.isInside(coordX, coordY)){
+                        this.matrix.rotateClockwise();
+                        break;
+                    }
+                }
+            }
+        }
         this.draw();
     }
 
@@ -50,6 +111,18 @@ class Tetrominos{
     rotateRight(){
         //TODO check for enough space from the voxel
         this.matrix.rotateClockwise();
+        for(var y = 0 ; y < this.matrix.tab.length ; y++){
+            for(var x = 0 ; x < this.matrix.tab[y].length ; x++){
+                if(this.matrix.tab[y][x] == 1){
+                    var coordX = this.location[0] + x;
+                    var coordY = this.location[1] + y;
+                    if(!this.voxel.isInside(coordX, coordY)){
+                        this.matrix.rotateCounterClockwise();
+                        break;
+                    }
+                }
+            }
+        }
         this.draw();
     }
 
@@ -57,6 +130,18 @@ class Tetrominos{
     *   Move the tetrominos
     */
     move(dx = 0 , dy = 0){
+        for(var y = 0 ; y < this.matrix.tab.length ; y++){
+            for(var x = 0 ; x < this.matrix.tab[y].length ; x++){
+                if(this.matrix.tab[y][x] == 1){
+                    var coordX = this.location[0] + x + dx;
+                    var coordY = this.location[1] + y + dy;
+                    if(this.voxel.get(coordX, coordY) != null ||
+                        !this.voxel.isInside(coordX, coordY)){
+                        return;
+                    }
+                }
+            }
+        }
         this.location[0] += dx;
         this.location[1] += dy;
         this.draw();
