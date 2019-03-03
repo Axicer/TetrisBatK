@@ -41,8 +41,10 @@ class Tetrominos{
                         this.voxel.get(this.location[0]+x, this.location[1]+y+1) != null){
                         //attach the tetrominos to the voxel
                         this.attach();
+                        this.voxel.checkLines();
                         //reset tetrominos
                         this.reset();
+                        this.draw();
                         break;
                     }
                 }
@@ -78,7 +80,18 @@ class Tetrominos{
         for(var y = 0 ; y < this.matrix.tab.length ; y++){
             for(var x = 0 ; x < this.matrix.tab[y].length ; x++){
                 if(this.matrix.tab[y][x] == 1){
-                    this.voxel.set(this.location[0]+x, this.location[1]+y, this.tile);
+                    var coordX = this.location[0] + x;
+                    var coordY = this.location[1] + y;
+                    //if there is already a piece
+                    if(this.voxel.get(coordX, coordY) != null){
+                        //stop the gravity & check loop
+                        clearInterval(this.gravityInterval);
+                        //end the game
+                        this.voxel.end();
+                    }else{
+                        //put the piece
+                        this.voxel.set(this.location[0]+x, this.location[1]+y, this.tile);
+                    }
                 }
             }
         }
@@ -95,7 +108,8 @@ class Tetrominos{
                 if(this.matrix.tab[y][x] == 1){
                     var coordX = this.location[0] + x;
                     var coordY = this.location[1] + y;
-                    if(!this.voxel.isInside(coordX, coordY)){
+                    if(!this.voxel.isInside(coordX, coordY) ||
+                        this.voxel.get(coordX, coordY) != null){
                         this.matrix.rotateClockwise();
                         break;
                     }
@@ -116,7 +130,8 @@ class Tetrominos{
                 if(this.matrix.tab[y][x] == 1){
                     var coordX = this.location[0] + x;
                     var coordY = this.location[1] + y;
-                    if(!this.voxel.isInside(coordX, coordY)){
+                    if(!this.voxel.isInside(coordX, coordY) ||
+                        this.voxel.get(coordX, coordY) != null){
                         this.matrix.rotateCounterClockwise();
                         break;
                     }
@@ -137,7 +152,7 @@ class Tetrominos{
                     var coordY = this.location[1] + y + dy;
                     if(this.voxel.get(coordX, coordY) != null ||
                         !this.voxel.isInside(coordX, coordY)){
-                        return;
+                        return false;
                     }
                 }
             }
@@ -145,5 +160,11 @@ class Tetrominos{
         this.location[0] += dx;
         this.location[1] += dy;
         this.draw();
+        return true;
+    }
+
+    hardDrop(){
+        while(this.move(0, 1)){}
+        this.checkFix();
     }
 }
