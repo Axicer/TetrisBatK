@@ -16,6 +16,7 @@ class Voxel{
 
         //spawn a tetrominos
         this.tetrominos = new Tetrominos(this);
+        this.tetrominos.draw();
     }
 
     draw(){
@@ -77,7 +78,6 @@ class Voxel{
                     linesCompleted[l]++;
                 }
             }
-            console.log("found line "+currentLine+" completed");
             for(var line = currentLine ; line >= 0 ; line--){
                 if(line == 0){
                     this.content[line] = new Array(this.width);
@@ -119,7 +119,9 @@ class Voxel{
     }
 
     end(){
-        console.log("fin du jeu !");
-        this.ended = true;
+        if(!this.ended){
+            console.log("fin du jeu !");
+            this.ended = true;
+        }
     }
 }

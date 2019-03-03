@@ -24,8 +24,9 @@ class Tetrominos{
     }
 
     reset(){
-        this.matrix = TETROMINOS_MATRICES[parseInt(Math.random()*TETROMINOS_MATRICES.length)];
-        this.tile = RED_TILE;
+        var pair = TETROMINOSES.poses[parseInt(Math.random()*TETROMINOSES.poses.length)];
+        this.matrix = pair.matrix;
+        this.tile = pair.tile;
         this.location = [parseInt(this.voxel.width/2)-2, 0];
     }
 
@@ -88,6 +89,7 @@ class Tetrominos{
                         clearInterval(this.gravityInterval);
                         //end the game
                         this.voxel.end();
+                        break;
                     }else{
                         //put the piece
                         this.voxel.set(this.location[0]+x, this.location[1]+y, this.tile);

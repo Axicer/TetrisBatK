@@ -46,33 +46,32 @@ class Matrix{
     }
 }
 
+const TETROMINOS_MATRIX_I = new Matrix([    [0, 0, 1, 0],
+                                            [0, 0, 1, 0],
+                                            [0, 0, 1, 0],
+                                            [0, 0, 1, 0]]);
+const TETROMINOS_MATRIX_J = new Matrix([    [0, 1, 0],
+                                            [0, 1, 0],
+                                            [1, 1, 0]]);
+const TETROMINOS_MATRIX_L = new Matrix([    [0, 1, 0],
+                                            [0, 1, 0],
+                                            [0, 1, 1]]);
+const TETROMINOS_MATRIX_S = new Matrix([    [0, 0, 0],
+                                            [0, 1, 1],
+                                            [1, 1, 0]]);
+const TETROMINOS_MATRIX_Z = new Matrix([    [0, 0, 0],
+                                            [1, 1, 0],
+                                            [0, 1, 1]]);
+const TETROMINOS_MATRIX_T = new Matrix([    [0, 0, 0],
+                                            [1, 1, 1],
+                                            [0, 1, 0]]);
+const TETROMINOS_MATRIX_O = new Matrix([    [1, 1],
+                                            [1, 1]]);
 
-const TETROMINOS_MATRIX_I = new Matrix([  [0, 0, 1, 0],
-                                        [0, 0, 1, 0],
-                                        [0, 0, 1, 0],
-                                        [0, 0, 1, 0]]);
-const TETROMINOS_MATRIX_J = new Matrix([  [0, 1, 0],
-                                        [0, 1, 0],
-                                        [1, 1, 0]]);
-const TETROMINOS_MATRIX_L = new Matrix([  [0, 1, 0],
-                                        [0, 1, 0],
-                                        [0, 1, 1]]);
-const TETROMINOS_MATRIX_S = new Matrix([  [0, 0, 0],
-                                        [0, 1, 1],
-                                        [1, 1, 0]]);
-const TETROMINOS_MATRIX_Z = new Matrix([  [0, 0, 0],
-                                        [1, 1, 0],
-                                        [0, 1, 1]]);
-const TETROMINOS_MATRIX_T = new Matrix([  [0, 0, 0],
-                                        [1, 1, 1],
-                                        [0, 1, 0]]);
-const TETROMINOS_MATRIX_O = new Matrix([  [1, 1],
-                                        [1, 1]]);
-
-const TETROMINOS_MATRICES = [TETROMINOS_MATRIX_I,
-                                TETROMINOS_MATRIX_J,
-                                TETROMINOS_MATRIX_L,
-                                TETROMINOS_MATRIX_S,
-                                TETROMINOS_MATRIX_Z,
-                                TETROMINOS_MATRIX_T,
-                                TETROMINOS_MATRIX_O];
+const TETROMINOSES = {poses:[ {tile: BLUE_TILE, matrix: TETROMINOS_MATRIX_J},
+                        {tile: RED_TILE, matrix: TETROMINOS_MATRIX_Z},
+                        {tile: CYAN_TILE, matrix: TETROMINOS_MATRIX_I},
+                        {tile: GREEN_TILE, matrix: TETROMINOS_MATRIX_S},
+                        {tile: ORANGE_TILE, matrix: TETROMINOS_MATRIX_L},
+                        {tile: PURPLE_TILE, matrix: TETROMINOS_MATRIX_T},
+                        {tile: YELLOW_TILE, matrix: TETROMINOS_MATRIX_O}]};
