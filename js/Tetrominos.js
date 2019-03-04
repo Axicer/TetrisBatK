@@ -84,6 +84,38 @@ class Tetrominos{
                 }
             }
         }
+
+        //get preview position
+        var previewCoordX = this.location[0];
+        var previewCoordY = this.location[1];
+        var canFall = true;
+        while(canFall){
+            for(var y = 0 ; y < this.matrix.tab.length ; y++){
+                for(var x = 0 ; x < this.matrix.tab[y].length ; x++){
+                    if(this.matrix.tab[y][x] == 1){
+                        var coordX = previewCoordX + x;
+                        var coordY = previewCoordY + y + 2;
+                        if(this.voxel.get(coordX, coordY) != null ||
+                            !this.voxel.isInside(coordX, coordY)){
+                            canFall = false;
+                        }
+                    }
+                }
+            }
+            previewCoordY++;
+        }
+        //draw preview
+        ctx.globalAlpha = 0.5;
+        for(var y = 0 ; y < this.matrix.tab.length ; y++){
+            for(var x = 0 ; x < this.matrix.tab[y].length ; x++){
+                if(this.matrix.tab[y][x] == 1){
+                    var coordX = (previewCoordX + x) * TILE_SIZE;
+                    var coordY = (previewCoordY + y) * TILE_SIZE;
+                    ctx.drawImage(this.tile, coordX, coordY);
+                }
+            }
+        }
+        ctx.globalAlpha = 1.0;
     }
 
     attach(){
