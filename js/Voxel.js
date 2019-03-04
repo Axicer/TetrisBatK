@@ -178,6 +178,8 @@ class Voxel{
         if(!this.ended){
             console.log("fin du jeu !");
             this.ended = true;
+            var restart_btn = document.getElementById("restart_btn");
+            restart_btn.style.visibility = "visible";
         }
     }
 }

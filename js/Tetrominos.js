@@ -41,7 +41,7 @@ class Tetrominos{
     }
 
     gravity(){
-        this.move(0, 1);
+        this.move(0, 1, false);
     }
 
     checkFix(){
@@ -138,6 +138,7 @@ class Tetrominos{
     }
 
     attach(){
+        PLACE_SOUND.play();
         for(var y = 0 ; y < this.matrix.tab.length ; y++){
             for(var x = 0 ; x < this.matrix.tab[y].length ; x++){
                 if(this.matrix.tab[y][x] == 1){
@@ -207,7 +208,7 @@ class Tetrominos{
     /**
     *   Move the tetrominos
     */
-    move(dx = 0 , dy = 0){
+    move(dx = 0 , dy = 0, sound = true){
         for(var y = 0 ; y < this.matrix.tab.length ; y++){
             for(var x = 0 ; x < this.matrix.tab[y].length ; x++){
                 if(this.matrix.tab[y][x] == 1){
@@ -220,6 +221,7 @@ class Tetrominos{
                 }
             }
         }
+        if(sound)MOVEMENT_SOUND.play();
         this.location[0] += dx;
         this.location[1] += dy;
         this.draw();
@@ -227,7 +229,8 @@ class Tetrominos{
     }
 
     hardDrop(){
-        while(this.move(0, 1)){}
+        HARD_DROP_SOUND.play();
+        while(this.move(0, 1, false)){}
         this.checkFix();
     }
 }

@@ -10,6 +10,11 @@ const YELLOW_TILE = loadPicture("res/pieces/yellow.png", TILE_SIZE, TILE_SIZE);
 
 const TILES = [BLUE_TILE, RED_TILE, CYAN_TILE, GREEN_TILE, ORANGE_TILE, PURPLE_TILE, YELLOW_TILE];
 
+const THEME_SOUND = new Audio("res/sounds/theme.mp3");
+const HARD_DROP_SOUND = new Audio("res/sounds/harddrop.mp3");
+const MOVEMENT_SOUND = new Audio("res/sounds/movement.wav");
+const PLACE_SOUND = new Audio("res/sounds/place.mp3");
+
 function areTilesLoaded(){
     return BLUE_TILE.complete &&
             RED_TILE.complete &&
