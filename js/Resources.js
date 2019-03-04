@@ -25,3 +25,13 @@ function loadPicture(src, width = 32, height = 32){
     img.src = src;
     return img;
 }
+
+function imgCopy(src) {
+  var copy = new Image(src.width, src.height);
+  copy.src = src.src;
+  return copy;
+}
+
+function matrixCopy(src){
+    return new Matrix(src.tab);
+}

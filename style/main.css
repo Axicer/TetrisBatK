@@ -17,6 +17,11 @@ canvas{
     margin-right: auto;
 }
 
+#tetris_next_tetrominos{
+    margin: 0;
+    left: auto;
+}
+
 #tetris_canvas{
     z-index: -1;
 }

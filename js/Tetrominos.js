@@ -8,6 +8,7 @@ class Tetrominos{
     */
     constructor(voxel){
         this.voxel = voxel;
+        this.nextTetrominosPair = TETROMINOSES.poses[parseInt(Math.random()*TETROMINOSES.poses.length)];
         this.reset();
         this.setGravityInterval(1000);
     }
@@ -33,9 +34,9 @@ class Tetrominos{
     }
 
     reset(){
-        var pair = TETROMINOSES.poses[parseInt(Math.random()*TETROMINOSES.poses.length)];
-        this.matrix = pair.matrix;
-        this.tile = pair.tile;
+        this.matrix = matrixCopy(this.nextTetrominosPair.matrix);
+        this.tile = imgCopy(this.nextTetrominosPair.tile);
+        this.nextTetrominosPair = TETROMINOSES.poses[parseInt(Math.random()*TETROMINOSES.poses.length)];
         this.location = [parseInt(this.voxel.width/2)-2, 0];
     }
 
@@ -104,6 +105,12 @@ class Tetrominos{
             }
             if(canFall)previewCoordY++;
         }
+
+        var next_elem = document.getElementById("tetris_next_tetrominos");
+        var next_ctx = next_elem.getContext("2d");
+        //clear
+        next_ctx.clearRect(0, 0, next_elem.width, next_elem.height);
+
         //draw preview
         ctx.globalAlpha = 0.5;
         for(var y = 0 ; y < this.matrix.tab.length ; y++){
@@ -116,6 +123,18 @@ class Tetrominos{
             }
         }
         ctx.globalAlpha = 1.0;
+
+        //draw next preview
+        for(var y = 0 ; y < this.nextTetrominosPair.matrix.tab.length ; y++){
+            for(var x = 0 ; x < this.nextTetrominosPair.matrix.tab[y].length ; x++){
+                if(this.nextTetrominosPair.matrix.tab[y][x] == 1){
+                    var nextCoordX = (x+(4-this.nextTetrominosPair.matrix.tab.length)/2)*TILE_SIZE;
+                    var nextCoordY = (y+(4-this.nextTetrominosPair.matrix.tab[y].length)/2)*TILE_SIZE;
+                    next_ctx.drawImage(this.nextTetrominosPair.tile, nextCoordX, nextCoordY);
+                }
+            }
+        }
+
     }
 
     attach(){
