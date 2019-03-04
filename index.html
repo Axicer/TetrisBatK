@@ -17,18 +17,23 @@
         <canvas id="tetris_next_tetrominos" width="128", height="128"></canvas>
         <div id="tetris_gui">
             <div>
-                <p>SCORE:</p>
+                <p>SCORE</p>
                 <p id="tetris_score">0</p>
             </div>
             <div>
-                <p>LINES:</p>
+                <p>LINES</p>
                 <p id="tetris_line_cleared">0</p>
             </div>
             <div>
-                <p>LEVEL:</p>
+                <p>LEVEL</p>
                 <p id="tetris_level">1 (Cafeteria)</p>
+            </div>
+            <div>
+                <p>Volume</p>
+                <input type="range" min="0" max="1" value="0.5" step="0.1" class="slider" id="volume_slider">
             </div>
         </div>
         <button id="restart_btn" onclick="restart()">RESTART</button>
+        <p id="pause">PAUSE</p>
     </body>
 </html>

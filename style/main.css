@@ -13,8 +13,9 @@ canvas{
     border-radius: 5px;
     left: 0;
     right: 0;
-    margin-left: auto;
-    margin-right: auto;
+    bottom: 0;
+    top: 0;
+    margin: auto;
 }
 
 #tetris_next_tetrominos{
@@ -63,4 +64,24 @@ canvas{
 
 #restart_btn:hover{
     background-color: rgba(255,255,255,0.1);
+}
+
+#volume_slider{
+    width: 100%;
+}
+
+#pause{
+    color: white;
+    font-weight: 900;
+    text-align: center;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 100px;
+    height: 40px;
+    margin: auto;
+    z-index: 2;
+    visibility: hidden;
 }

@@ -30,6 +30,7 @@ class Voxel{
 
         this.level = 1;
         this.lastLineCompleted = -1;
+        this.paused = false;
         this.ended = false;
 
         //spawn a tetrominos
@@ -149,7 +150,11 @@ class Voxel{
     *   Handle the keydown event
     */
     handleArrows(ev){
-        if(this.ended)return;
+        if(ev.keyCode == 27){
+            //escape
+            this.pause();
+        }
+        if(this.ended || this.paused)return;
         if(ev.keyCode == 37){
             //left
             this.tetrominos.move(-1, 0);
@@ -172,6 +177,18 @@ class Voxel{
             //shift
             //TODO keep touch
         }
+    }
+
+    pause(){
+        if(this.ended)return;
+        if(this.paused){
+            this.tetrominos.setGravityInterval(this.tetrominos.gravityTimeout);
+            document.getElementById("pause").style.visibility = "hidden";
+        }else{
+            clearInterval(this.tetrominos.gravityInterval);
+            document.getElementById("pause").style.visibility = "visible";
+        }
+        this.paused = !this.paused;
     }
 
     end(){

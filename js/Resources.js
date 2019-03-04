@@ -15,6 +15,8 @@ const HARD_DROP_SOUND = new Audio("res/sounds/harddrop.mp3");
 const MOVEMENT_SOUND = new Audio("res/sounds/movement.wav");
 const PLACE_SOUND = new Audio("res/sounds/place.mp3");
 
+const SONGS = [THEME_SOUND, HARD_DROP_SOUND, MOVEMENT_SOUND, PLACE_SOUND];
+
 function areTilesLoaded(){
     return BLUE_TILE.complete &&
             RED_TILE.complete &&
@@ -29,6 +31,15 @@ function loadPicture(src, width = 32, height = 32){
     var img = new Image(width, height);
     img.src = src;
     return img;
+}
+
+function setVolume(volume){
+    for(var i = 0 ; i < SONGS.length ; i++){
+        SONGS[i].volume = volume;
+    }
+}
+function getRandomSong(){
+    return THEME_SOUND;
 }
 
 function imgCopy(src) {
