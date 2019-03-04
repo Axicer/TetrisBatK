@@ -10,6 +10,7 @@ body{
 canvas{
     position: absolute;
     border: 5px solid white;
+    border-radius: 5px;
     left: 0;
     right: 0;
     margin-left: auto;
@@ -18,4 +19,22 @@ canvas{
 
 #tetris_canvas{
     z-index: -1;
+}
+
+#tetris_gui{
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: white;
+    width: 20%;
+}
+
+#tetris_gui > div{
+    border: 2px solid white;
+    border-radius: 5px;
+    margin: 5px;
+}
+
+#tetris_gui > div > p{
+    text-align: center;
 }

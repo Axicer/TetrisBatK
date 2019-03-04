@@ -9,6 +9,15 @@ class Tetrominos{
     constructor(voxel){
         this.voxel = voxel;
         this.reset();
+        this.setGravityInterval(1000);
+    }
+
+    setGravityInterval(millis){
+        //set the timeout
+        this.gravityTimeout = millis
+        //if the timeout is already running, clear the interval
+        if(this.gravityInterval != null)clearInterval(this.gravityInterval);
+        //set the interval
         this.gravityInterval = setInterval((function(self){
             return function(){
                 //apply gravity
@@ -18,9 +27,9 @@ class Tetrominos{
                     return function(){
                         self.checkFix();
                     }
-                })(self), 500);
+                })(self), 1000);
             }
-        })(this), 800);
+        })(this), this.gravityTimeout);
     }
 
     reset(){

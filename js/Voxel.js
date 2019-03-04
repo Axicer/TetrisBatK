@@ -1,3 +1,5 @@
+const SPEED_INCREASE_FACTOR = 1.1;
+
 class Voxel{
 
     constructor(width = 10, height = 20){
@@ -12,6 +14,8 @@ class Voxel{
         //set canvas black
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
+        this.level = 1;
+        this.lastLineCompleted = -1;
         this.ended = false;
 
         //spawn a tetrominos
@@ -67,7 +71,12 @@ class Voxel{
             }
         }
 
-
+        //add lines completed count to the GUI
+        var line_elem = document.getElementById("tetris_line_cleared");
+        var lines = parseInt(line_elem.innerHTML)+linesCompleted.length;
+        if(linesCompleted.length > 0)this.updateScore(linesCompleted.length);
+        lines = this.checkLevel(lines);
+        line_elem.innerHTML = lines;
 
         for(var i = 0 ; i < linesCompleted.length ; i++){
             //shift all above lines by one
@@ -89,6 +98,31 @@ class Voxel{
         }
     }
 
+    updateScore(lines){
+        var score_elem = document.getElementById("tetris_score");
+        var score = parseInt(score_elem.innerHTML);
+        score += lines*1000;
+        if(this.lastLineCompleted == lines){
+            //back to back bonus (x1.5 instead of x1)
+            score += lines*500;
+        }
+        this.lastLineCompleted = lines;
+        score_elem.innerHTML = score;
+    }
+
+    checkLevel(lines){
+        var tmp = lines/10;
+        if(tmp >= 1.0){
+            this.level++;
+            var level_elem = document.getElementById("tetris_level");
+            level_elem.innerHTML = this.level;
+            //give 10 lines to score as a level upgrade bonus
+            this.updateScore(10);
+            this.tetrominos.setGravityInterval(this.tetrominos.gravityTimeout/SPEED_INCREASE_FACTOR);
+            return lines%10;
+        }
+        return lines;
+    }
     /**
     *   Handle the keydown event
     */
