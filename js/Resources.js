@@ -41,13 +41,3 @@ function setVolume(volume){
 function getRandomSong(){
     return THEME_SOUND;
 }
-
-function imgCopy(src) {
-  var copy = new Image(src.width, src.height);
-  copy.src = src.src;
-  return copy;
-}
-
-function matrixCopy(src){
-    return new Matrix(src.tab);
-}

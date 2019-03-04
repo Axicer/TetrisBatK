@@ -1,15 +1,14 @@
-/**
-*   The falling tetrominos class
-*/
 class Tetrominos{
 
-    /**
-    *   Create the Tetrominos with his patter and a position
-    */
     constructor(voxel){
         this.voxel = voxel;
-        this.nextTetrominosPair = TETROMINOSES.poses[parseInt(Math.random()*TETROMINOSES.poses.length)];
+        //the next tetrominos wich will spawn
+        this.next = TETROMINOSES.poses[parseInt(Math.random()*TETROMINOSES.poses.length)];
+        //the swap tetrominos (null at initialisation)
+        this.swap = null;
+        //set matrix, tile, and position from this.next
         this.reset();
+        //start gravity
         this.setGravityInterval(1000);
     }
 
@@ -33,10 +32,32 @@ class Tetrominos{
         })(this), this.gravityTimeout);
     }
 
+    swapTetrominos(){
+        //if swap has already occurs then return
+        if(this.hasSwapped)return;
+        if(this.swap == null){
+            //swap slot is empty
+            //set swap to current tetrominos
+            this.swap = {matrix:this.matrix, tile:this.tile};
+            //spawn the next tetrominos
+            this.reset();
+        }else{
+            //swap the current tetrominos and the swap slot
+            var tmp = this.swap;
+            this.swap = {matrix:this.matrix, tile:this.tile};
+            this.matrix = tmp.matrix;
+            this.tile = tmp.tile;
+            //reset the location
+            this.location = [parseInt(this.voxel.width/2)-2, 0];
+        }
+        this.hasSwapped = true;
+        this.draw();
+    }
+
     reset(){
-        this.matrix = matrixCopy(this.nextTetrominosPair.matrix);
-        this.tile = imgCopy(this.nextTetrominosPair.tile);
-        this.nextTetrominosPair = TETROMINOSES.poses[parseInt(Math.random()*TETROMINOSES.poses.length)];
+        this.matrix = this.next.matrix;
+        this.tile = this.next.tile;
+        this.next = TETROMINOSES.poses[parseInt(Math.random()*TETROMINOSES.poses.length)];
         this.location = [parseInt(this.voxel.width/2)-2, 0];
     }
 
@@ -54,6 +75,7 @@ class Tetrominos{
                         this.attach();
                         this.voxel.checkLines();
                         //reset tetrominos
+                        this.hasSwapped = false;
                         this.reset();
                         this.draw();
                         break;
@@ -106,10 +128,6 @@ class Tetrominos{
             if(canFall)previewCoordY++;
         }
 
-        var next_elem = document.getElementById("tetris_next_tetrominos");
-        var next_ctx = next_elem.getContext("2d");
-        //clear
-        next_ctx.clearRect(0, 0, next_elem.width, next_elem.height);
 
         //draw preview
         ctx.globalAlpha = 0.5;
@@ -125,12 +143,31 @@ class Tetrominos{
         ctx.globalAlpha = 1.0;
 
         //draw next preview
-        for(var y = 0 ; y < this.nextTetrominosPair.matrix.tab.length ; y++){
-            for(var x = 0 ; x < this.nextTetrominosPair.matrix.tab[y].length ; x++){
-                if(this.nextTetrominosPair.matrix.tab[y][x] == 1){
-                    var nextCoordX = (x+(4-this.nextTetrominosPair.matrix.tab.length)/2)*TILE_SIZE;
-                    var nextCoordY = (y+(4-this.nextTetrominosPair.matrix.tab[y].length)/2)*TILE_SIZE;
-                    next_ctx.drawImage(this.nextTetrominosPair.tile, nextCoordX, nextCoordY);
+        var next_elem = document.getElementById("tetris_next_tetrominos");
+        var next_ctx = next_elem.getContext("2d");
+        next_ctx.clearRect(0, 0, next_elem.width, next_elem.height);
+        for(var y = 0 ; y < this.next.matrix.tab.length ; y++){
+            for(var x = 0 ; x < this.next.matrix.tab[y].length ; x++){
+                if(this.next.matrix.tab[y][x] == 1){
+                    var nextCoordX = (x+(4-this.next.matrix.tab.length)/2)*TILE_SIZE;
+                    var nextCoordY = (y+(4-this.next.matrix.tab[y].length)/2)*TILE_SIZE;
+                    next_ctx.drawImage(this.next.tile, nextCoordX, nextCoordY);
+                }
+            }
+        }
+
+        //draw stored preview
+        if(this.swap != null){
+            var stored_elem = document.getElementById("tetris_stored_tetrominos");
+            var stored_ctx = stored_elem.getContext("2d");
+            stored_ctx.clearRect(0, 0, stored_elem.width, stored_elem.height);
+            for(var y = 0 ; y < this.swap.matrix.tab.length ; y++){
+                for(var x = 0 ; x < this.swap.matrix.tab[y].length ; x++){
+                    if(this.swap.matrix.tab[y][x] == 1){
+                        var swapCoordX = (x+(4-this.swap.matrix.tab.length)/2)*TILE_SIZE;
+                        var swapCoordY = (y+(4-this.swap.matrix.tab[y].length)/2)*TILE_SIZE;
+                        stored_ctx.drawImage(this.swap.tile, swapCoordX, swapCoordY);
+                    }
                 }
             }
         }
@@ -161,53 +198,42 @@ class Tetrominos{
         }
     }
 
-    /**
-    *   Rotate the tetrominos to the left
-    */
     rotateLeft(){
-        //TODO check for enough space from the voxel
-        this.matrix.rotateCounterClockwise();
-        for(var y = 0 ; y < this.matrix.tab.length ; y++){
-            for(var x = 0 ; x < this.matrix.tab[y].length ; x++){
-                if(this.matrix.tab[y][x] == 1){
+        var m = this.matrix.rotateCounterClockwise();
+        for(var y = 0 ; y < m.tab.length ; y++){
+            for(var x = 0 ; x < m.tab[y].length ; x++){
+                if(m.tab[y][x] == 1){
                     var coordX = this.location[0] + x;
                     var coordY = this.location[1] + y;
                     if(!this.voxel.isInside(coordX, coordY) ||
                         this.voxel.get(coordX, coordY) != null){
-                        this.matrix.rotateClockwise();
-                        break;
+                        return;
                     }
                 }
             }
         }
+        this.matrix = m;
         this.draw();
     }
 
-    /**
-    *   Rotate the tetrominos to the right
-    */
     rotateRight(){
-        //TODO check for enough space from the voxel
-        this.matrix.rotateClockwise();
-        for(var y = 0 ; y < this.matrix.tab.length ; y++){
-            for(var x = 0 ; x < this.matrix.tab[y].length ; x++){
-                if(this.matrix.tab[y][x] == 1){
+        var m = this.matrix.rotateClockwise();
+        for(var y = 0 ; y < m.tab.length ; y++){
+            for(var x = 0 ; x < m.tab[y].length ; x++){
+                if(m.tab[y][x] == 1){
                     var coordX = this.location[0] + x;
                     var coordY = this.location[1] + y;
                     if(!this.voxel.isInside(coordX, coordY) ||
                         this.voxel.get(coordX, coordY) != null){
-                        this.matrix.rotateCounterClockwise();
-                        break;
+                        return;
                     }
                 }
             }
         }
+        this.matrix = m;
         this.draw();
     }
 
-    /**
-    *   Move the tetrominos
-    */
     move(dx = 0 , dy = 0, sound = true){
         for(var y = 0 ; y < this.matrix.tab.length ; y++){
             for(var x = 0 ; x < this.matrix.tab[y].length ; x++){

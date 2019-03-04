@@ -23,6 +23,14 @@ canvas{
     left: auto;
 }
 
+#tetris_stored_tetrominos{
+    margin: 0;
+    top: auto;
+    bottom: 0;
+    right: 0;
+    left: auto;
+}
+
 #tetris_canvas{
     z-index: -1;
 }

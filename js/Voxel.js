@@ -173,9 +173,9 @@ class Voxel{
         }else if(ev.keyCode == 90){
             //Z
             this.tetrominos.rotateLeft();
-        }else if(ev.keyCode == 90){
+        }else if(ev.keyCode == 16){
             //shift
-            //TODO keep touch
+            this.tetrominos.swapTetrominos();
         }
     }
 
