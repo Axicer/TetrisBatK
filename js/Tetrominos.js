@@ -23,11 +23,11 @@ class Tetrominos{
                 //apply gravity
                 self.gravity();
                 //check for fix later
-                setTimeout((function(self){
+                self.checkTimeout = setTimeout((function(self){
                     return function(){
                         self.checkFix();
                     }
-                })(self), 1000);
+                })(self), 900);
             }
         })(this), this.gravityTimeout);
     }
@@ -94,7 +94,7 @@ class Tetrominos{
                 for(var x = 0 ; x < this.matrix.tab[y].length ; x++){
                     if(this.matrix.tab[y][x] == 1){
                         var coordX = previewCoordX + x;
-                        var coordY = previewCoordY + y + 2;
+                        var coordY = previewCoordY + y + 1;
                         if(this.voxel.get(coordX, coordY) != null ||
                             !this.voxel.isInside(coordX, coordY)){
                             canFall = false;
@@ -102,7 +102,7 @@ class Tetrominos{
                     }
                 }
             }
-            previewCoordY++;
+            if(canFall)previewCoordY++;
         }
         //draw preview
         ctx.globalAlpha = 0.5;
@@ -128,9 +128,10 @@ class Tetrominos{
                     if(this.voxel.get(coordX, coordY) != null){
                         //stop the gravity & check loop
                         clearInterval(this.gravityInterval);
+                        clearTimeout(this.checkTimeout);
                         //end the game
                         this.voxel.end();
-                        break;
+                        return;
                     }else{
                         //put the piece
                         this.voxel.set(this.location[0]+x, this.location[1]+y, this.tile);
