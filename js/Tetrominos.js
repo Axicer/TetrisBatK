@@ -43,16 +43,17 @@ class Tetrominos{
         if(this.swap == null){
             //swap slot is empty
             //set swap to current tetrominos
-            this.swap = {matrix:this.matrix, tile:this.tile, name:this.name};
+            this.swap = {matrix:this.matrix, tile:this.tile, name:this.name, rotationState:this.rotationState};
             //spawn the next tetrominos
             this.reset();
         }else{
             //swap the current tetrominos and the swap slot
             var tmp = this.swap;
-            this.swap = {matrix:this.matrix, tile:this.tile, name:this.name};
+            this.swap = {matrix:this.matrix, tile:this.tile, name:this.name, rotationState:this.rotationState};
             this.matrix = tmp.matrix;
             this.tile = tmp.tile;
-            this.name = tmp.name
+            this.name = tmp.name;
+            this.rotationState = tmp.rotationState;
             //reset the location
             this.location = [parseInt(this.voxel.width/2)-2, -1];
         }
