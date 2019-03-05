@@ -2,8 +2,10 @@ class Tetrominos{
 
     constructor(voxel){
         this.voxel = voxel;
+        //the spawner of tetrominos
+        this.spawner = new Spawner();
         //the next tetrominos wich will spawn
-        this.next = TETROMINOSES.poses[parseInt(Math.random()*TETROMINOSES.poses.length)];
+        this.next = this.spawner.get();
         //the swap tetrominos (null at initialisation)
         this.swap = null;
         //set matrix, tile, and position from this.next
@@ -29,7 +31,7 @@ class Tetrominos{
                         return function(){
                             self.checkFix();
                         }
-                    })(self), self.gravityTimeout);
+                    })(self), 1000);
                 }
             }
         })(this), this.gravityTimeout);
@@ -62,7 +64,7 @@ class Tetrominos{
         this.tile = this.next.tile;
         this.name = this.next.name;
         this.rotationState = 0;
-        this.next = TETROMINOSES.poses[parseInt(Math.random()*TETROMINOSES.poses.length)];
+        this.next = this.spawner.get();
         this.location = [parseInt(this.voxel.width/2)-2, -1];
     }
 
@@ -209,9 +211,9 @@ class Tetrominos{
     }
 
     rotateLeft(){
-        var res = findRotationLeft(this, (this.rotationState-1)%4);
+        var res = findRotation(this, mod(this.rotationState-1, 4), false);
         if(res == null)return;
-        this.rotationState = (this.rotationState-1)%4;
+        this.rotationState = mod(this.rotationState-1, 4);
         this.matrix = res[0];
         this.location[0] += res[1];
         this.location[1] += res[2];
@@ -219,9 +221,9 @@ class Tetrominos{
     }
 
     rotateRight(){
-        var res = findRotationRight(this, (this.rotationState+1)%4);
+        var res = findRotation(this, mod(this.rotationState+1, 4), true);
         if(res == null)return;
-        this.rotationState = (this.rotationState+1)%4;
+        this.rotationState = mod(this.rotationState+1, 4);
         this.matrix = res[0];
         this.location[0] += res[1];
         this.location[1] += res[2];
