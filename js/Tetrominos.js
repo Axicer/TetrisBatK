@@ -31,7 +31,7 @@ class Tetrominos{
                         return function(){
                             self.checkFix();
                         }
-                    })(self), 1000);
+                    })(self), 1850);
                 }
             }
         })(this), this.gravityTimeout);
@@ -43,15 +43,16 @@ class Tetrominos{
         if(this.swap == null){
             //swap slot is empty
             //set swap to current tetrominos
-            this.swap = {matrix:this.matrix, tile:this.tile};
+            this.swap = {matrix:this.matrix, tile:this.tile, name:this.name};
             //spawn the next tetrominos
             this.reset();
         }else{
             //swap the current tetrominos and the swap slot
             var tmp = this.swap;
-            this.swap = {matrix:this.matrix, tile:this.tile};
+            this.swap = {matrix:this.matrix, tile:this.tile, name:this.name};
             this.matrix = tmp.matrix;
             this.tile = tmp.tile;
+            this.name = tmp.name
             //reset the location
             this.location = [parseInt(this.voxel.width/2)-2, -1];
         }
@@ -222,6 +223,7 @@ class Tetrominos{
 
     rotateRight(){
         var res = findRotation(this, mod(this.rotationState+1, 4), true);
+        console.log(res);
         if(res == null)return;
         this.rotationState = mod(this.rotationState+1, 4);
         this.matrix = res[0];
