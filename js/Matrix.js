@@ -1,6 +1,3 @@
-const LEFT_ROTATION_ANGLE = "left";
-const RIGHT_ROTATION_ANGLE = "right";
-
 class Matrix{
 
     constructor(tab){
@@ -72,10 +69,10 @@ const TETROMINOS_MATRIX_T = new Matrix([    [0, 0, 0],
 const TETROMINOS_MATRIX_O = new Matrix([    [1, 1],
                                             [1, 1]]);
 
-const TETROMINOSES = {poses:[ {tile: BLUE_TILE, matrix: TETROMINOS_MATRIX_J},
-                        {tile: RED_TILE, matrix: TETROMINOS_MATRIX_Z},
-                        {tile: CYAN_TILE, matrix: TETROMINOS_MATRIX_I},
-                        {tile: GREEN_TILE, matrix: TETROMINOS_MATRIX_S},
-                        {tile: ORANGE_TILE, matrix: TETROMINOS_MATRIX_L},
-                        {tile: PURPLE_TILE, matrix: TETROMINOS_MATRIX_T},
-                        {tile: YELLOW_TILE, matrix: TETROMINOS_MATRIX_O}]};
+const TETROMINOSES = {poses:[ {tile: BLUE_TILE, matrix: TETROMINOS_MATRIX_J, name:"J"},
+                        {tile: RED_TILE, matrix: TETROMINOS_MATRIX_Z, name:"Z"},
+                        {tile: CYAN_TILE, matrix: TETROMINOS_MATRIX_I, name:"I"},
+                        {tile: GREEN_TILE, matrix: TETROMINOS_MATRIX_S, name:"S"},
+                        {tile: ORANGE_TILE, matrix: TETROMINOS_MATRIX_L, name:"L"},
+                        {tile: PURPLE_TILE, matrix: TETROMINOS_MATRIX_T, name:"T"},
+                        {tile: YELLOW_TILE, matrix: TETROMINOS_MATRIX_O, name:"O"}]};

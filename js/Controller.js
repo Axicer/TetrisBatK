@@ -5,21 +5,23 @@ document.addEventListener("keydown", function(ev){
 });
 
 currentSong = getRandomSong();
-setVolume(0.5);
-currentSong.addEventListener('ended', function() {
+setVolume(0.1);
+playCurrentSong();
+
+function playCurrentSong(){
     currentSong.currentTime = 0;
-    currentSong = getRandomSong();
+    var choosenSong = getRandomSong();
+    while(choosenSong == currentSong){
+        choosenSong = getRandomSong();
+    }
+    currentSong = choosenSong;
+    currentSong.addEventListener('ended', playCurrentSong, false);
     currentSong.play().then(function() {
         console.log("music started");
     }).catch(function(error){
         console.log("autoplayed music prevented ! No music will be played");
     });
-}, false);
-currentSong.play().then(function() {
-    console.log("music started");
-}).catch(function(error){
-    console.log("autoplayed music prevented ! No music will be played");
-});
+}
 
 function restart(){
     var restart_btn = document.getElementById("restart_btn");

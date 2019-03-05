@@ -22,12 +22,15 @@ class Tetrominos{
             return function(){
                 //apply gravity
                 self.gravity();
-                //check for fix later
-                self.checkTimeout = setTimeout((function(self){
-                    return function(){
-                        self.checkFix();
-                    }
-                })(self), 900);
+                //if the tetrominos should be attached (but do not attach it)
+                if(self.checkFix(false)){
+                    //check for fix later
+                    self.checkTimeout = setTimeout((function(self){
+                        return function(){
+                            self.checkFix();
+                        }
+                    })(self), self.gravityTimeout);
+                }
             }
         })(this), this.gravityTimeout);
     }
@@ -48,7 +51,7 @@ class Tetrominos{
             this.matrix = tmp.matrix;
             this.tile = tmp.tile;
             //reset the location
-            this.location = [parseInt(this.voxel.width/2)-2, 0];
+            this.location = [parseInt(this.voxel.width/2)-2, -1];
         }
         this.hasSwapped = true;
         this.draw();
@@ -57,32 +60,39 @@ class Tetrominos{
     reset(){
         this.matrix = this.next.matrix;
         this.tile = this.next.tile;
+        this.name = this.next.name;
+        this.rotationState = 0;
         this.next = TETROMINOSES.poses[parseInt(Math.random()*TETROMINOSES.poses.length)];
-        this.location = [parseInt(this.voxel.width/2)-2, 0];
+        this.location = [parseInt(this.voxel.width/2)-2, -1];
     }
 
     gravity(){
         this.move(0, 1, false);
     }
 
-    checkFix(){
+    checkFix(action = true){
         for(var y = 0 ; y < this.matrix.tab.length ; y++){
             for(var x = 0 ; x < this.matrix.tab[y].length ; x++){
                 if(this.matrix.tab[y][x] == 1){
                     if(this.location[1]+y+1 >= this.voxel.height ||
                         this.voxel.get(this.location[0]+x, this.location[1]+y+1) != null){
-                        //attach the tetrominos to the voxel
-                        this.attach();
-                        this.voxel.checkLines();
-                        //reset tetrominos
-                        this.hasSwapped = false;
-                        this.reset();
-                        this.draw();
-                        break;
+                        if(action){
+                            //attach the tetrominos to the voxel
+                            this.attach();
+                            this.voxel.checkLines();
+                            //reset tetrominos
+                            this.hasSwapped = false;
+                            this.reset();
+                            this.draw();
+                            return;
+                        }else{
+                            return true;
+                        }
                     }
                 }
             }
         }
+        if(!action)return false;
     }
 
     /**
@@ -199,60 +209,69 @@ class Tetrominos{
     }
 
     rotateLeft(){
-        var m = this.matrix.rotateCounterClockwise();
-        for(var y = 0 ; y < m.tab.length ; y++){
-            for(var x = 0 ; x < m.tab[y].length ; x++){
-                if(m.tab[y][x] == 1){
-                    var coordX = this.location[0] + x;
-                    var coordY = this.location[1] + y;
-                    if(!this.voxel.isInside(coordX, coordY) ||
-                        this.voxel.get(coordX, coordY) != null){
-                        return;
-                    }
-                }
-            }
-        }
-        this.matrix = m;
+        var res = findRotationLeft(this, (this.rotationState-1)%4);
+        if(res == null)return;
+        this.rotationState = (this.rotationState-1)%4;
+        this.matrix = res[0];
+        this.location[0] += res[1];
+        this.location[1] += res[2];
         this.draw();
     }
 
     rotateRight(){
-        var m = this.matrix.rotateClockwise();
-        for(var y = 0 ; y < m.tab.length ; y++){
-            for(var x = 0 ; x < m.tab[y].length ; x++){
-                if(m.tab[y][x] == 1){
-                    var coordX = this.location[0] + x;
-                    var coordY = this.location[1] + y;
-                    if(!this.voxel.isInside(coordX, coordY) ||
-                        this.voxel.get(coordX, coordY) != null){
-                        return;
-                    }
-                }
-            }
-        }
-        this.matrix = m;
+        var res = findRotationRight(this, (this.rotationState+1)%4);
+        if(res == null)return;
+        this.rotationState = (this.rotationState+1)%4;
+        this.matrix = res[0];
+        this.location[0] += res[1];
+        this.location[1] += res[2];
         this.draw();
     }
 
     move(dx = 0 , dy = 0, sound = true){
-        for(var y = 0 ; y < this.matrix.tab.length ; y++){
-            for(var x = 0 ; x < this.matrix.tab[y].length ; x++){
-                if(this.matrix.tab[y][x] == 1){
+        if(!this.isOOB(dx, dy) && !this.alreadyContainsData(dx, dy)){
+            if(sound)MOVEMENT_SOUND.play();
+            this.location[0] += dx;
+            this.location[1] += dy;
+            this.draw();
+            return true;
+        }
+        return false;
+    }
+
+    isOOB(dx, dy, mat = null){
+        if(mat == null)mat = this.matrix;
+        for(var y = 0 ; y < mat.tab.length ; y++){
+            for(var x = 0 ; x < mat.tab[y].length ; x++){
+                if(mat.tab[y][x] == 1){
                     var coordX = this.location[0] + x + dx;
                     var coordY = this.location[1] + y + dy;
-                    if(this.voxel.get(coordX, coordY) != null ||
-                        !this.voxel.isInside(coordX, coordY)){
-                        return false;
+                    if(!this.voxel.isInside(coordX, coordY) && !this.voxel.isOutsideTop(coordX, coordY)){
+                        return true;
                     }
                 }
             }
         }
-        if(sound)MOVEMENT_SOUND.play();
-        this.location[0] += dx;
-        this.location[1] += dy;
-        this.draw();
-        return true;
+        return false;
     }
+
+    alreadyContainsData(dx, dy, mat = null){
+        if(mat == null)mat = this.matrix;
+        for(var y = 0 ; y < mat.tab.length ; y++){
+            for(var x = 0 ; x < mat.tab[y].length ; x++){
+                if(mat.tab[y][x] == 1){
+                    var coordX = this.location[0] + x + dx;
+                    var coordY = this.location[1] + y + dy;
+                    if(this.voxel.get(coordX, coordY) != null){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+
 
     hardDrop(){
         HARD_DROP_SOUND.play();

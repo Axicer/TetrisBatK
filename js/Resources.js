@@ -10,12 +10,26 @@ const YELLOW_TILE = loadPicture("res/pieces/yellow.png", TILE_SIZE, TILE_SIZE);
 
 const TILES = [BLUE_TILE, RED_TILE, CYAN_TILE, GREEN_TILE, ORANGE_TILE, PURPLE_TILE, YELLOW_TILE];
 
-const THEME_SOUND = new Audio("res/sounds/theme.mp3");
-const HARD_DROP_SOUND = new Audio("res/sounds/harddrop.mp3");
-const MOVEMENT_SOUND = new Audio("res/sounds/movement.wav");
-const PLACE_SOUND = new Audio("res/sounds/place.mp3");
+const THEME_ORCHESTRA_SOUND = new Audio("res/sounds/themes/theme_orchestra.mp3");
+const THEME_99_1_SOUND = new Audio("res/sounds/themes/theme_99_1.mp3");
+const THEME_99_2_SOUND = new Audio("res/sounds/themes/theme_99_2.mp3");
+const THEME_99_3_SOUND = new Audio("res/sounds/themes/theme_99_3.mp3");
+const THEME_DUBSTEP_SOUND = new Audio("res/sounds/themes/theme_dubstep.mp3");
+const THEME_EPIC_SOUND = new Audio("res/sounds/themes/theme_epic.mp3");
 
-const SONGS = [THEME_SOUND, HARD_DROP_SOUND, MOVEMENT_SOUND, PLACE_SOUND];
+const HARD_DROP_SOUND = new Audio("res/sounds/movements/harddrop.mp3");
+const MOVEMENT_SOUND = new Audio("res/sounds/movements/movement.wav");
+const PLACE_SOUND = new Audio("res/sounds//movements/place.mp3");
+
+const THEMES = [THEME_ORCHESTRA_SOUND,
+                THEME_99_1_SOUND,
+                THEME_99_2_SOUND,
+                THEME_99_3_SOUND,
+                THEME_DUBSTEP_SOUND,
+                THEME_EPIC_SOUND];
+const SONGS = [HARD_DROP_SOUND,
+                MOVEMENT_SOUND,
+                PLACE_SOUND].concat(THEMES);
 
 function areTilesLoaded(){
     return BLUE_TILE.complete &&
@@ -39,5 +53,5 @@ function setVolume(volume){
     }
 }
 function getRandomSong(){
-    return THEME_SOUND;
+    return THEMES[parseInt(Math.random()*THEMES.length)];
 }
