@@ -8,6 +8,8 @@ class Tetrominos{
         this.next = this.spawner.get();
         //the swap tetrominos (null at initialisation)
         this.swap = null;
+
+        this.checkTimeout = -1;
         //set matrix, tile, and position from this.next
         this.reset();
         //start gravity
@@ -64,32 +66,42 @@ class Tetrominos{
     gravity(){
         //move 1 down
         this.move(0, 1, false);
-        if(this.checkFix(0,0, false)){
+
+        if(this.checkLock(0,0, false)){
             this.resetLockTimeout();
         }
     }
 
-    resetLockTimeout(){
-        //reset the check lock timeout
-        if(this.checkTimeout != null){
+    cancelLockTimeout(){
+        if(this.checkTimeout != -1){
             clearTimeout(this.checkTimeout);
+            this.checkTimeout = -1;
         }
+    }
+
+    resetLockTimeout(){
+        if(this.checkTimeout != -1)return;
+
         this.checkTimeout = setTimeout((function(self){
             return function(){
-                self.checkFix();
+                self.checkLock();
+                self.checkTimeout = -1;
             }
         })(this), 500);
     }
 
-    checkFix(action = true){
+    checkLock(action = true){
         for(var y = 0 ; y < this.matrix.tab.length ; y++){
             for(var x = 0 ; x < this.matrix.tab[y].length ; x++){
                 if(this.matrix.tab[y][x] == 1){
-                    if(this.location[1]+y+1 >= this.voxel.height ||
-                        this.voxel.get(this.location[0]+x, this.location[1]+y+1) != null){
+                    var coordX = this.location[0]+x;
+                    var coordY = this.location[1]+y;
+                    if(this.voxel.isOutsideTop(coordX, coordY+1) ||
+                        this.voxel.isOutsideBottom(coordX, coordY+1) ||
+                        this.voxel.get(coordX, coordY+1) != null){
                         if(action){
-                            //attach the tetrominos to the voxel
-                            this.attach();
+                            //lock the tetrominos to the voxel
+                            this.lock();
                             this.voxel.checkLines();
                             //reset tetrominos
                             this.hasSwapped = false;
@@ -106,9 +118,6 @@ class Tetrominos{
         if(!action)return false;
     }
 
-    /**
-    *   draw the tetrominos at his actual place
-    */
     draw(){
         //only draw if the tiles are loaded
         if(!areTilesLoaded())return;
@@ -195,7 +204,7 @@ class Tetrominos{
 
     }
 
-    attach(){
+    lock(){
         PLACE_SOUND.play();
         for(var y = 0 ; y < this.matrix.tab.length ; y++){
             for(var x = 0 ; x < this.matrix.tab[y].length ; x++){
@@ -222,6 +231,8 @@ class Tetrominos{
     rotateLeft(){
         var res = findRotation(this, mod(this.rotationState-1, 4), false);
         if(res == null)return;
+        MOVEMENT_SOUND.play();
+        this.cancelLockTimeout();
         this.resetLockTimeout();
         this.rotationState = mod(this.rotationState-1, 4);
         this.matrix = res[0];
@@ -233,6 +244,8 @@ class Tetrominos{
     rotateRight(){
         var res = findRotation(this, mod(this.rotationState+1, 4), true);
         if(res == null)return;
+        MOVEMENT_SOUND.play();
+        this.cancelLockTimeout();
         this.resetLockTimeout();
         this.rotationState = mod(this.rotationState+1, 4);
         this.matrix = res[0];
@@ -243,8 +256,11 @@ class Tetrominos{
 
     move(dx = 0 , dy = 0, sound = true){
         if(!this.isOOB(dx, dy) && !this.alreadyContainsData(dx, dy)){
-            if(sound)MOVEMENT_SOUND.play();
-            this.resetLockTimeout();
+            if(sound){
+                MOVEMENT_SOUND.play();
+                this.cancelLockTimeout();
+                this.resetLockTimeout();
+            }
             this.location[0] += dx;
             this.location[1] += dy;
             this.draw();
@@ -290,6 +306,6 @@ class Tetrominos{
     hardDrop(){
         HARD_DROP_SOUND.play();
         while(this.move(0, 1, false)){}
-        this.checkFix();
+        this.checkLock();
     }
 }

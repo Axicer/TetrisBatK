@@ -1,4 +1,4 @@
-const SPEED_INCREASE_FACTOR = 1.1;
+const SPEED_INCREASE_FACTOR = 1.25;
 const LEVELS_NAME = ["Cafeteria",
                     "Bureau de Mr MARIE-JEANNE",
                     "Bureau de Mr GARCIA",
@@ -63,14 +63,8 @@ class Voxel{
     isOutsideTop(x, y){
         return y < 0;
     }
-    isOutsideRight(x, y){
-        return x >= this.width;
-    }
     isOutsideBottom(x, y){
         return y >= this.height;
-    }
-    isOutsideLeft(x, y){
-        return x < 0;
     }
 
     get(x, y){
@@ -158,9 +152,8 @@ class Voxel{
         }
         return lines;
     }
-    /**
-    *   Handle the keydown event
-    */
+
+
     handleArrows(ev){
         if(ev.keyCode == 27){
             //escape
@@ -198,6 +191,7 @@ class Voxel{
             document.getElementById("pause").style.visibility = "hidden";
         }else{
             clearInterval(this.tetrominos.gravityInterval);
+            this.tetrominos.cancelLockTimeout();
             document.getElementById("pause").style.visibility = "visible";
         }
         this.paused = !this.paused;
