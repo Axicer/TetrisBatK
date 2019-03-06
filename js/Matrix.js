@@ -48,8 +48,8 @@ class Matrix{
 }
 
 const TETROMINOS_MATRIX_I = new Matrix([    [0, 0, 0, 0],
-                                            [0, 0, 0, 0],
                                             [1, 1, 1, 1],
+                                            [0, 0, 0, 0],
                                             [0, 0, 0, 0]]);
 const TETROMINOS_MATRIX_J = new Matrix([    [1, 0, 0],
                                             [1, 1, 1],
@@ -57,12 +57,12 @@ const TETROMINOS_MATRIX_J = new Matrix([    [1, 0, 0],
 const TETROMINOS_MATRIX_L = new Matrix([    [0, 0, 1],
                                             [1, 1, 1],
                                             [0, 0, 0]]);
-const TETROMINOS_MATRIX_S = new Matrix([    [0, 1, 0],
-                                            [0, 1, 1],
-                                            [0, 0, 1]]);
-const TETROMINOS_MATRIX_Z = new Matrix([    [0, 1, 0],
+const TETROMINOS_MATRIX_S = new Matrix([    [0, 1, 1],
                                             [1, 1, 0],
-                                            [1, 0, 0]]);
+                                            [0, 0, 0]]);
+const TETROMINOS_MATRIX_Z = new Matrix([    [1, 1, 0],
+                                            [0, 1, 1],
+                                            [0, 0, 0]]);
 const TETROMINOS_MATRIX_T = new Matrix([    [0, 1, 0],
                                             [1, 1, 1],
                                             [0, 0, 0]]);

@@ -24,15 +24,6 @@ class Tetrominos{
             return function(){
                 //apply gravity
                 self.gravity();
-                //if the tetrominos should be attached (but do not attach it)
-                if(self.checkFix(false)){
-                    //check for fix later
-                    self.checkTimeout = setTimeout((function(self){
-                        return function(){
-                            self.checkFix();
-                        }
-                    })(self), 1850);
-                }
             }
         })(this), this.gravityTimeout);
     }
@@ -71,7 +62,23 @@ class Tetrominos{
     }
 
     gravity(){
+        //move 1 down
         this.move(0, 1, false);
+        if(this.checkFix(0,0, false)){
+            this.resetLockTimeout();
+        }
+    }
+
+    resetLockTimeout(){
+        //reset the check lock timeout
+        if(this.checkTimeout != null){
+            clearTimeout(this.checkTimeout);
+        }
+        this.checkTimeout = setTimeout((function(self){
+            return function(){
+                self.checkFix();
+            }
+        })(this), 500);
     }
 
     checkFix(action = true){
@@ -215,6 +222,7 @@ class Tetrominos{
     rotateLeft(){
         var res = findRotation(this, mod(this.rotationState-1, 4), false);
         if(res == null)return;
+        this.resetLockTimeout();
         this.rotationState = mod(this.rotationState-1, 4);
         this.matrix = res[0];
         this.location[0] += res[1];
@@ -224,8 +232,8 @@ class Tetrominos{
 
     rotateRight(){
         var res = findRotation(this, mod(this.rotationState+1, 4), true);
-        console.log(res);
         if(res == null)return;
+        this.resetLockTimeout();
         this.rotationState = mod(this.rotationState+1, 4);
         this.matrix = res[0];
         this.location[0] += res[1];
@@ -236,6 +244,7 @@ class Tetrominos{
     move(dx = 0 , dy = 0, sound = true){
         if(!this.isOOB(dx, dy) && !this.alreadyContainsData(dx, dy)){
             if(sound)MOVEMENT_SOUND.play();
+            this.resetLockTimeout();
             this.location[0] += dx;
             this.location[1] += dy;
             this.draw();
