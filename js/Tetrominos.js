@@ -206,6 +206,7 @@ class Tetrominos{
 
     lock(){
         PLACE_SOUND.play();
+        var corner_count = 0;
         for(var y = 0 ; y < this.matrix.tab.length ; y++){
             for(var x = 0 ; x < this.matrix.tab[y].length ; x++){
                 if(this.matrix.tab[y][x] == 1){
@@ -223,15 +224,24 @@ class Tetrominos{
                         //put the piece
                         this.voxel.set(this.location[0]+x, this.location[1]+y, this.tile);
                     }
+                }else if(this.name == "T" && x != 1 && y != 1){ //if the piece is a T and only if it's a corner
+                    var coordX = this.location[0] + x;
+                    var coordY = this.location[1] + y;
+                    if(this.voxel.get(coordX, coordY) != null || !this.voxel.isInside(coordX, coordY)){
+                        corner_count++;
+                    }
                 }
             }
         }
+        this.lastActionWasTSpin = corner_count >= 3 && this.hasRotated;
     }
 
     rotateLeft(){
         var res = findRotation(this, mod(this.rotationState-1, 4), false);
         if(res == null)return;
+        this.hasRotated = true;
         MOVEMENT_SOUND.play();
+        this.lastRotationHasWallKick = res[1] != 0 || res[2] != 0;
         this.cancelLockTimeout();
         this.resetLockTimeout();
         this.rotationState = mod(this.rotationState-1, 4);
@@ -244,7 +254,9 @@ class Tetrominos{
     rotateRight(){
         var res = findRotation(this, mod(this.rotationState+1, 4), true);
         if(res == null)return;
+        this.hasRotated = true;
         MOVEMENT_SOUND.play();
+        this.lastRotationHasWallKick = res[1] != 0 || res[2] != 0;
         this.cancelLockTimeout();
         this.resetLockTimeout();
         this.rotationState = mod(this.rotationState+1, 4);
@@ -261,6 +273,7 @@ class Tetrominos{
                 this.cancelLockTimeout();
                 this.resetLockTimeout();
             }
+            this.hasRotated = false;
             this.location[0] += dx;
             this.location[1] += dy;
             this.draw();

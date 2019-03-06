@@ -1,4 +1,17 @@
 const SPEED_INCREASE_FACTOR = 1.25;
+
+const SINGLE = "single";
+const DOUBLE = "double";
+const TRIPLE = "triple";
+const TETRIS = "tetris";
+const T_SPIN_MINI_NO_LINES = "tspinmininolines";
+const T_SPIN_NO_LINES = "tspinnolines";
+const T_SPIN_MINI_SINGLE = "tspinminisingle";
+const T_SPIN_SINGLE = "tspinsingle";
+const T_SPIN_MINI_DOUBLE = "tspinminidouble";
+const T_SPIN_DOUBLE = "tspindouble";
+const T_SPIN_TRIPLE = "tspintriple";
+
 const LEVELS_NAME = ["Cafeteria",
                     "Bureau de Mr MARIE-JEANNE",
                     "Bureau de Mr GARCIA",
@@ -91,14 +104,18 @@ class Voxel{
                 linesCompleted.push(y);
             }
         }
+        var lines = linesCompleted.length;
+        this.updateScore(lines);
+
 
         //add lines completed count to the GUI
         var line_elem = document.getElementById("tetris_line_cleared");
-        var lines = parseInt(line_elem.innerHTML)+linesCompleted.length;
-        if(linesCompleted.length > 0)this.updateScore(linesCompleted.length);
-        lines = this.checkLevel(lines);
-        line_elem.innerHTML = lines;
+        var old_lines = parseInt(line_elem.innerHTML);
+        old_lines += lines;
+        old_lines = this.checkLevel(old_lines);
+        line_elem.innerHTML = old_lines;
 
+        //clear full lines
         for(var i = 0 ; i < linesCompleted.length ; i++){
             //shift all above lines by one
             var currentLine = linesCompleted[i];
@@ -120,15 +137,109 @@ class Voxel{
     }
 
     updateScore(lines){
-        var score_elem = document.getElementById("tetris_score");
-        var score = parseInt(score_elem.innerHTML);
-        score += lines*1000;
-        if(this.lastLineCompleted == lines){
-            //back to back bonus (x1.5 instead of x1)
-            score += lines*500;
+        var score = 0;
+        var canB2B = false;
+        var beforeAction = this.lastAction;
+        //if last action is a T-Spin
+        if(this.tetrominos.lastActionWasTSpin){
+            if(this.tetrominos.lastRotationHasWallKick){
+                //tspin standard
+                switch(lines){
+                    case 0: //tspin no line
+                        score += 400*this.level;
+                        this.lastAction = T_SPIN_NO_LINES;
+                        this.shout("T-Spin !", 800);
+                        break;
+                    case 1:// tspin single
+                        score += 800*this.level;
+                        this.lastAction = T_SPIN_SINGLE;
+                        this.shout("T-Spin Single !", 800);
+                        canB2B = true;
+                        break;
+                    case 2:// tspin double
+                        score += 1200*this.level;
+                        this.lastAction = T_SPIN_DOUBLE;
+                        this.shout("T-Spin Double !", 800);
+                        canB2B = true;
+                        break;
+                    case 3://tspin triple
+                        score += 1600*this.level;
+                        this.lastAction = T_SPIN_TRIPLE;
+                        this.shout("T-Spin Triple !", 800);
+                        canB2B = true;
+                        break;
+                    default:break;
+                }
+            }else{
+                //tspin mini
+                switch(lines){
+                    case 0: //tspin mini no line
+                        score += 100*this.level;
+                        this.lastAction = T_SPIN_MINI_NO_LINES;
+                        this.shout("Mini T-Spin !", 800);
+                        break;
+                    case 1:// tspin mini single
+                        score += 200*this.level;
+                        this.lastAction = T_SPIN_MINI_SINGLE;
+                        this.shout("Mini T-Spin Single !", 800);
+                        break;
+                    case 2://tspin mini double
+                        score += 400*this.level;
+                        this.lastAction = T_SPIN_MINI_DOUBLE;
+                        this.shout("Mini T-Spin Double !", 800);
+                        break;
+                    default:break;
+                }
+            }
+        }else{
+            switch (lines) {
+                case 1://single
+                    score += 100*this.level;
+                    this.lastAction = SINGLE;
+                    break;
+                case 2://double
+                    score += 300*this.level;
+                    this.lastAction = DOUBLE;
+                    break;
+                case 3://triple
+                    score += 500*this.level;
+                    this.lastAction = TRIPLE;
+                    break;
+                case 4://tetris
+                    score += 800*this.level;
+                    this.lastAction = TETRIS;
+                    this.shout("Tetris !", 800);
+                    canB2B = true;
+                    break;
+                default:break;
+            }
         }
-        this.lastLineCompleted = lines;
-        score_elem.innerHTML = score;
+        if(canB2B &&
+            (beforeAction == T_SPIN_SINGLE ||
+            beforeAction == T_SPIN_DOUBLE ||
+            beforeAction == T_SPIN_TRIPLE ||
+            beforeAction == TETRIS)){
+            //it's back to back
+            this.shout("BACK-TO-BACK !", 800, "b2b");
+            score *= 3.0/2.0;
+        }
+
+        //update display
+        var score_elem = document.getElementById("tetris_score");
+        var old_score = parseInt(score_elem.innerHTML);
+        old_score += score;
+        score_elem.innerHTML = old_score;
+    }
+
+    shout(message, millis, divId = "shout"){
+        var shout_elem = document.getElementById(divId);
+        shout_elem.innerHTML = message;
+        shout_elem.style.visibility = "visible";
+        setTimeout((function(elem, self){
+            return function(){
+                elem.style.visibility = "hidden";
+            }
+        })(shout_elem, this), millis);
     }
 
     getLevelName(level){
@@ -140,13 +251,10 @@ class Voxel{
     }
 
     checkLevel(lines){
-        var tmp = lines/10;
-        if(tmp >= 1.0){
+        if(lines >= 10){
             this.level++;
             var level_elem = document.getElementById("tetris_level");
             level_elem.innerHTML = this.level+ " (" + this.getLevelName() + ")";
-            //give 10 lines to score as a level upgrade bonus
-            this.updateScore(10);
             this.tetrominos.setGravityInterval(this.tetrominos.gravityTimeout/SPEED_INCREASE_FACTOR);
             return lines%10;
         }
