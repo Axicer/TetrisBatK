@@ -1,7 +1,7 @@
 class Tetrominos{
 
-    constructor(voxel){
-        this.voxel = voxel;
+    constructor(game){
+        this.game = game;
         //the spawner of tetrominos
         this.spawner = new Spawner();
         //the next tetrominos wich will spawn
@@ -48,7 +48,7 @@ class Tetrominos{
             this.name = tmp.name;
             this.rotationState = tmp.rotationState;
             //reset the location
-            this.location = [parseInt(this.voxel.width/2)-2, -1];
+            this.location = [parseInt(this.game.voxel.width/2)-2, -1];
         }
         this.hasSwapped = true;
         this.draw();
@@ -60,7 +60,7 @@ class Tetrominos{
         this.name = this.next.name;
         this.rotationState = 0;
         this.next = this.spawner.get();
-        this.location = [parseInt(this.voxel.width/2)-2, -1];
+        this.location = [parseInt(this.game.voxel.width/2)-2, -1];
     }
 
     gravity(){
@@ -96,13 +96,13 @@ class Tetrominos{
                 if(this.matrix.tab[y][x] == 1){
                     var coordX = this.location[0]+x;
                     var coordY = this.location[1]+y;
-                    if(this.voxel.isOutsideTop(coordX, coordY+1) ||
-                        this.voxel.isOutsideBottom(coordX, coordY+1) ||
-                        this.voxel.get(coordX, coordY+1) != null){
+                    if(this.game.voxel.isOutsideTop(coordX, coordY+1) ||
+                        this.game.voxel.isOutsideBottom(coordX, coordY+1) ||
+                        this.game.voxel.get(coordX, coordY+1) != null){
                         if(action){
                             //lock the tetrominos to the voxel
                             this.lock();
-                            this.voxel.checkLines();
+                            this.game.voxel.checkLines();
                             //reset tetrominos
                             this.hasSwapped = false;
                             this.reset();
@@ -148,8 +148,8 @@ class Tetrominos{
                     if(this.matrix.tab[y][x] == 1){
                         var coordX = previewCoordX + x;
                         var coordY = previewCoordY + y + 1;
-                        if(this.voxel.get(coordX, coordY) != null ||
-                            !this.voxel.isInside(coordX, coordY)){
+                        if(this.game.voxel.get(coordX, coordY) != null ||
+                            !this.game.voxel.isInside(coordX, coordY)){
                             canFall = false;
                         }
                     }
@@ -213,21 +213,21 @@ class Tetrominos{
                     var coordX = this.location[0] + x;
                     var coordY = this.location[1] + y;
                     //if there is already a piece
-                    if(this.voxel.get(coordX, coordY) != null){
+                    if(this.game.voxel.get(coordX, coordY) != null){
                         //stop the gravity & check loop
                         clearInterval(this.gravityInterval);
                         clearTimeout(this.checkTimeout);
                         //end the game
-                        this.voxel.end();
+                        this.game.end();
                         return;
                     }else{
                         //put the piece
-                        this.voxel.set(this.location[0]+x, this.location[1]+y, this.tile);
+                        this.game.voxel.set(this.location[0]+x, this.location[1]+y, this.tile);
                     }
                 }else if(this.name == "T" && x != 1 && y != 1){ //if the piece is a T and only if it's a corner
                     var coordX = this.location[0] + x;
                     var coordY = this.location[1] + y;
-                    if(this.voxel.get(coordX, coordY) != null || !this.voxel.isInside(coordX, coordY)){
+                    if(this.game.voxel.get(coordX, coordY) != null || !this.game.voxel.isInside(coordX, coordY)){
                         corner_count++;
                     }
                 }
@@ -289,7 +289,7 @@ class Tetrominos{
                 if(mat.tab[y][x] == 1){
                     var coordX = this.location[0] + x + dx;
                     var coordY = this.location[1] + y + dy;
-                    if(!this.voxel.isInside(coordX, coordY) && !this.voxel.isOutsideTop(coordX, coordY)){
+                    if(!this.game.voxel.isInside(coordX, coordY) && !this.game.voxel.isOutsideTop(coordX, coordY)){
                         return true;
                     }
                 }
@@ -305,7 +305,7 @@ class Tetrominos{
                 if(mat.tab[y][x] == 1){
                     var coordX = this.location[0] + x + dx;
                     var coordY = this.location[1] + y + dy;
-                    if(this.voxel.get(coordX, coordY) != null){
+                    if(this.game.voxel.get(coordX, coordY) != null){
                         return true;
                     }
                 }

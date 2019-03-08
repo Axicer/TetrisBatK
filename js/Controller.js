@@ -1,7 +1,7 @@
-var voxel = new Voxel(10, 20);
+var game = new Game();
 
 document.addEventListener("keydown", function(ev){
-    voxel.handleArrows(ev);
+    game.handleArrows(ev);
 });
 
 currentSong = getRandomSong();
@@ -26,7 +26,7 @@ function playCurrentSong(){
 function restart(){
     var restart_btn = document.getElementById("restart_btn");
     restart_btn.style.visibility = "hidden";
-    voxel = new Voxel(10, 20);
+    game = new Game();
 }
 
 document.getElementById("volume_slider").addEventListener("input", function(){
