@@ -64,7 +64,7 @@ class Voxel{
             var completed = true;
             for(var x = 0 ; x < this.content[y].length ; x++){
                 completed = this.content[y][x] != null;
-                if(!completed)break;
+				if(!completed)break;
             }
             if(completed){
                 linesCompleted.push(y);
@@ -95,5 +95,19 @@ class Voxel{
             }
             this.draw();
         }
+		var emptyLines = [];
+		for(var y = this.content.length-1 ; y >= 0 ; y--){
+			var empty = true;
+			for(var x = 0 ; x < this.content[y].length ; x++){
+                empty = this.content[y][x] == null;
+				if(!empty)break;
+            }
+			if(empty){
+				emptyLines.push(y);
+			}
+        }
+		if(emptyLines.length == this.height){
+			this.game.scoring.fullClear();
+		}
     }
 }

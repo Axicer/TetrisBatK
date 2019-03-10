@@ -5,7 +5,7 @@ class Scoring{
 		this.game = game;
 	}
 
-	updateScore(lines){
+	updateScore(lines, hasFullClear = false){
         var score = 0;
         var canB2B = false;
         var beforeAction = this.game.lastAction;
@@ -83,6 +83,7 @@ class Scoring{
                 default:break;
             }
         }
+		
         if(canB2B &&
             (beforeAction == T_SPIN_SINGLE ||
             beforeAction == T_SPIN_DOUBLE ||
@@ -97,6 +98,10 @@ class Scoring{
         this.updateDisplay(score);
     }
 
+	fullClear(){
+		shout("FULL CLEAR", 800);
+	}
+	
     updateDisplay(incr){
     	var score_elem = document.getElementById("tetris_score");
         var score = parseInt(score_elem.innerHTML);
