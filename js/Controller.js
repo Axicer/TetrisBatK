@@ -1,12 +1,20 @@
-var game = new Game();
+var legal_notice = document.getElementById("legal-notice");
+setTimeout((function(notice){
+    return function(){
+        notice.style.opacity = 0;
+        var game = new Game();
 
-document.addEventListener("keydown", function(ev){
-    game.handleArrows(ev);
-});
+        document.addEventListener("keydown", function(ev){
+            game.handleArrows(ev);
+        });
 
-currentSong = getRandomSong();
-setVolume(0.1);
-playCurrentSong();
+        currentSong = getRandomSong();
+        setVolume(0.1);
+        playCurrentSong();
+    }
+})(legal_notice), 5000);
+
+
 
 function playCurrentSong(){
     currentSong.currentTime = 0;
