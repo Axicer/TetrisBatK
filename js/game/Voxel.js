@@ -12,7 +12,7 @@ class Voxel{
         for (var i = 0 ; i < height ; i++)this.content[i]=new Array(width);
         this.ctx = this.canvas.getContext("2d");
         //set color to black
-        this.ctx.fillStyle = "#000000";
+        this.ctx.fillStyle = "#00000099";
         //set canvas black
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
@@ -33,7 +33,9 @@ class Voxel{
 
     clear(){
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.fillStyle = "#00000099";
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.fillStyle = "#000000";
     }
 
     isInside(x, y){

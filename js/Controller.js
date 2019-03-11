@@ -23,7 +23,11 @@ class Controller{
                 self.currentSong.play().then(function(){}).catch(function(error){
                     console.log("autoplay rejected, manual audio button is WIP");
                 });
-                self.currentSong.addEventListener('ended', self.playCurrentSong, false);
+                self.currentSong.addEventListener('ended', (function(self){
+                    return function(){
+                        self.playCurrentSong(self);
+                    }
+                })(self), false);
             }
         })(this), 5000);
 
@@ -37,7 +41,7 @@ class Controller{
         });
     }
 
-    playCurrentSong(){
+    playCurrentSong(self){
         var choosenSong = self.loader.getRandomSong();
         while(choosenSong == self.currentSong){
             choosenSong = self.loader.getRandomSong();

@@ -10,7 +10,8 @@
 }
 
 body{
-    background-color: black;
+    background: url(../res/background/libre-service.JPG);
+    background-size: cover;
 }
 
 #tetris{
