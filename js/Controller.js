@@ -1,45 +1,63 @@
-var legal_notice = document.getElementById("legal-notice");
-setTimeout((function(notice){
-    return function(){
-        notice.style.opacity = 0;
-        var game = new Game();
+class Controller{
 
-        document.addEventListener("keydown", function(ev){
-            game.handleArrows(ev);
+    constructor(loader){
+        this.legal_notice = document.getElementById("legal-notice");
+        this.loader = loader;
+        this.loader.loadAll();
+        setTimeout((function(self){
+            return function(){
+                self.legal_notice.style.opacity = 0;
+                self.game = new Game(self.loader);
+                document.addEventListener("keydown", function(ev){
+                    self.game.handleArrows(ev);
+                });
+
+                setTimeout((function(self){
+                    return function(){
+                        self.legal_notice.style.zIndex = -1000;
+                    }
+                })(self), 1000);
+
+                self.currentSong = self.loader.getRandomSong();
+                self.loader.setMainVolume(0.1);
+                self.currentSong.play();
+                self.currentSong.addEventListener('ended', self.playCurrentSong, false);
+            }
+        })(this), 5000);
+
+        document.getElementById("volume_slider").addEventListener("input", (function(self){
+            return function(){
+                self.loader.setMainVolume(document.getElementById("volume_slider").value);
+            }
+        })(this));
+        document.getElementById("volume_slider").addEventListener("mouseup", function(){
+            document.getElementById("volume_slider").blur();
         });
-
-        currentSong = getRandomSong();
-        setVolume(0.1);
-        playCurrentSong();
     }
-})(legal_notice), 5000);
 
-
-
-function playCurrentSong(){
-    currentSong.currentTime = 0;
-    var choosenSong = getRandomSong();
-    while(choosenSong == currentSong){
-        choosenSong = getRandomSong();
+    playCurrentSong(){
+        var choosenSong = self.loader.getRandomSong();
+        while(choosenSong == self.currentSong){
+            choosenSong = self.loader.getRandomSong();
+        }
+        self.currentSong = choosenSong;
+        self.currentSong.addEventListener('ended', self.playCurrentSong, false);
+        self.currentSong.play().then(function() {
+            console.log("music started");
+        }).catch(function(error){
+            console.log("autoplayed music prevented ! No music will be played");
+        });
     }
-    currentSong = choosenSong;
-    currentSong.addEventListener('ended', playCurrentSong, false);
-    currentSong.play().then(function() {
-        console.log("music started");
-    }).catch(function(error){
-        console.log("autoplayed music prevented ! No music will be played");
-    });
+
+    restart(){
+        var restart_btn = document.getElementById("restart_btn");
+        restart_btn.style.visibility = "hidden";
+        this.game = new Game(this.loader);
+    }
 }
 
 function restart(){
-    var restart_btn = document.getElementById("restart_btn");
-    restart_btn.style.visibility = "hidden";
-    game = new Game();
+    controller.restart();
 }
 
-document.getElementById("volume_slider").addEventListener("input", function(){
-    setVolume(document.getElementById("volume_slider").value);
-});
-document.getElementById("volume_slider").addEventListener("mouseup", function(){
-    document.getElementById("volume_slider").blur();
-});
+controller = new Controller(new Loader());

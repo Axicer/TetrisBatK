@@ -1,9 +1,10 @@
 class Tetrominos{
 
     constructor(game){
+        this.loader = game.loader;
         this.game = game;
         //the spawner of tetrominos
-        this.spawner = new Spawner();
+        this.spawner = new Spawner(game.loader);
         //the next tetrominos wich will spawn
         this.next = this.spawner.get();
         //the swap tetrominos (null at initialisation)
@@ -119,9 +120,6 @@ class Tetrominos{
     }
 
     draw(){
-        //only draw if the tiles are loaded
-        if(!areTilesLoaded())return;
-
         //clear the canvas
         var canvas = document.getElementById("tetris_falling");
         var ctx = canvas.getContext("2d");
@@ -205,7 +203,7 @@ class Tetrominos{
     }
 
     lock(){
-        PLACE_SOUND.play();
+        this.loader.getEffect(EFFECT_PLACE).play();
         var corner_count = 0;
         for(var y = 0 ; y < this.matrix.tab.length ; y++){
             for(var x = 0 ; x < this.matrix.tab[y].length ; x++){
@@ -240,7 +238,7 @@ class Tetrominos{
         var res = findRotation(this, mod(this.rotationState-1, 4), false);
         if(res == null)return;
         this.hasRotated = true;
-        MOVEMENT_SOUND.play();
+        this.loader.getEffect(EFFECT_MOVEMENT).play();
         this.lastRotationHasWallKick = res[1] != 0 || res[2] != 0;
         this.cancelLockTimeout();
         this.resetLockTimeout();
@@ -255,7 +253,7 @@ class Tetrominos{
         var res = findRotation(this, mod(this.rotationState+1, 4), true);
         if(res == null)return;
         this.hasRotated = true;
-        MOVEMENT_SOUND.play();
+        this.loader.getEffect(EFFECT_MOVEMENT).play();
         this.lastRotationHasWallKick = res[1] != 0 || res[2] != 0;
         this.cancelLockTimeout();
         this.resetLockTimeout();
@@ -269,7 +267,7 @@ class Tetrominos{
     move(dx = 0 , dy = 0, sound = true){
         if(!this.isOOB(dx, dy) && !this.alreadyContainsData(dx, dy)){
             if(sound){
-                MOVEMENT_SOUND.play();
+                this.loader.getEffect(EFFECT_MOVEMENT).play();
                 this.cancelLockTimeout();
                 this.resetLockTimeout();
             }
@@ -317,7 +315,7 @@ class Tetrominos{
 
 
     hardDrop(){
-        HARD_DROP_SOUND.play();
+        this.loader.getEffect(EFFECT_HARD_DROP).play();
         while(this.move(0, 1, false)){}
         this.checkLock();
     }

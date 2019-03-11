@@ -1,6 +1,8 @@
 class Game{
-	
-	constructor(){
+
+	constructor(loader){
+		this.loader = loader;
+
 		this.lastAction = null;
 		this.ended = false;
 		this.paused = false;
