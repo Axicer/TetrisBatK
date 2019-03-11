@@ -20,7 +20,9 @@ class Controller{
 
                 self.currentSong = self.loader.getRandomSong();
                 self.loader.setMainVolume(0.1);
-                self.currentSong.play();
+                self.currentSong.play().then(function(){}).catch(function(error){
+                    console.log("autoplay rejected, manual audio button is WIP");
+                });
                 self.currentSong.addEventListener('ended', self.playCurrentSong, false);
             }
         })(this), 5000);
@@ -42,10 +44,8 @@ class Controller{
         }
         self.currentSong = choosenSong;
         self.currentSong.addEventListener('ended', self.playCurrentSong, false);
-        self.currentSong.play().then(function() {
-            console.log("music started");
-        }).catch(function(error){
-            console.log("autoplayed music prevented ! No music will be played");
+        self.currentSong.play().then(function(){}).catch(function(error){
+            console.log("autoplay rejected, manual audio button is WIP");
         });
     }
 
