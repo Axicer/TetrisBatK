@@ -1,6 +1,7 @@
 class Loader{
 
-    constructor(){
+    constructor(controller){
+        this.controller = controller;
         //tiles dictionnary
         this.tiles = [];
         this.loadedTileCount = 0;
@@ -16,10 +17,10 @@ class Loader{
     }
 
     loadAll(){
-        this.loadEffects();
+        this.loadEffects(true);
     }
 
-    loadEffects(){
+    loadEffects(loadNextData = false){
         var status = document.getElementById("progress_status");
         status.innerHTML = "Loading effects...";
         var progress = document.getElementById("bar");
@@ -29,7 +30,7 @@ class Loader{
             //when song is loaded and ready to play
             audio.addEventListener("canplaythrough", (function(self, sound){
                 return function _incr(){
-                    self.incrementLoadedEffect();
+                    self.incrementLoadedEffect(loadNextData);
                     sound.removeEventListener("canplaythrough", _incr);
                 }
             })(this, audio));
@@ -37,13 +38,16 @@ class Loader{
         }
     }
 
-    incrementLoadedEffect(){
+    incrementLoadedEffect(loadNextData){
         this.loadedEffectCount++;
         var percent = this.loadedEffectCount*100/Object.keys(EFFECTS_PATH).length;
         var progress = document.getElementById("bar");
         progress.style.width = percent+"%";
-        if(percent == 100){
-            this.loadSongs();
+        if(percent == 100 && loadNextData){
+            this.loadSongs(true);
+        }else if(percent == 100){
+            var status = document.getElementById("progress_status");
+            status.innerHTML = "Effects Loaded.";
         }
     }
 
@@ -51,7 +55,7 @@ class Loader{
         return this.effects[name];
     }
 
-    loadSongs(){
+    loadSongs(loadNextData = false){
         var status = document.getElementById("progress_status");
         status.innerHTML = "Loading songs...";
         var progress = document.getElementById("bar");
@@ -61,7 +65,7 @@ class Loader{
             //when song is loaded and ready to play
             audio.addEventListener("canplaythrough", (function(self, sound){
                 return function _incr(){
-                    self.incrementLoadedSong();
+                    self.incrementLoadedSong(loadNextData);
                     sound.removeEventListener("canplaythrough", _incr)
                 }
             })(this, audio));
@@ -69,13 +73,16 @@ class Loader{
         }
     }
 
-    incrementLoadedSong(){
+    incrementLoadedSong(loadNextData){
         this.loadedSongCount++;
         var percent = this.loadedSongCount*100/Object.keys(SONGS_PATH).length;
         var progress = document.getElementById("bar");
         progress.style.width = percent+"%";
-        if(percent == 100){
-            this.loadTiles();
+        if(percent == 100 && loadNextData){
+            this.loadTiles(true);
+        }else if(percent == 100){
+            var status = document.getElementById("progress_status");
+            status.innerHTML = "Songs Loaded.";
         }
     }
 
@@ -98,7 +105,7 @@ class Loader{
         }
     }
 
-    loadTiles(){
+    loadTiles(loadNextData = false){
         var status = document.getElementById("progress_status");
         status.innerHTML = "Loading tiles textures...";
         var progress = document.getElementById("bar");
@@ -110,20 +117,23 @@ class Loader{
             //when image is loaded
             img.addEventListener("load", (function(self){
                 return function(){
-                    self.incrementLoadedTile();
+                    self.incrementLoadedTile(loadNextData);
                 }
             })(this));
             this.tiles[name] = img;
         }
     }
 
-    incrementLoadedTile(){
+    incrementLoadedTile(loadNextData){
         this.loadedTileCount++;
         var percent = this.loadedTileCount*100/Object.keys(TILES_PATHS).length;
         var progress = document.getElementById("bar");
         progress.style.width = percent+"%";
-        if(percent == 100){
-            this.loadBackgrounds();
+        if(percent == 100 && loadNextData){
+            this.loadBackgrounds(true);
+        }else if(percent == 100){
+            var status = document.getElementById("progress_status");
+            status.innerHTML = "Tiles Loaded.";
         }
     }
 
@@ -131,7 +141,7 @@ class Loader{
         return this.tiles[name];
     }
 
-    loadBackgrounds(){
+    loadBackgrounds(loadNextData = false){
         var status = document.getElementById("progress_status");
         status.innerHTML = "Loading backgrounds...";
         var progress = document.getElementById("bar");
@@ -143,21 +153,26 @@ class Loader{
             //when image is loaded
             img.addEventListener("load", (function(self){
                 return function(){
-                    self.incrementLoadedBackground();
+                    self.incrementLoadedBackground(loadNextData);
                 }
             })(this));
             this.backgrounds[name] = img;
         }
     }
 
-    incrementLoadedBackground(){
+    incrementLoadedBackground(loadNextData){
         this.loadedBackgroundCount++;
         var percent = this.loadedBackgroundCount*100/Object.keys(BACKGROUND_PATHS).length;
         var progress = document.getElementById("bar");
         progress.style.width = percent+"%";
-        if(percent == 100){
+        if(percent == 100 && loadNextData){
             var status = document.getElementById("progress_status");
             status.innerHTML = "All loaded.";
+
+            this.controller.canReleaseLegalNotice = true;
+        }else{
+            var status = document.getElementById("progress_status");
+            status.innerHTML = "Backgrounds loaded.";
         }
     }
 
