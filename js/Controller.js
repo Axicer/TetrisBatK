@@ -56,6 +56,7 @@ class Controller{
     restart(){
         var restart_btn = document.getElementById("restart_btn");
         restart_btn.style.visibility = "hidden";
+        this.game.voxel.clear();
         this.game = new Game(this.loader);
     }
 }

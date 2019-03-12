@@ -11,10 +11,7 @@ class Voxel{
         this.content = new Array(height);
         for (var i = 0 ; i < height ; i++)this.content[i]=new Array(width);
         this.ctx = this.canvas.getContext("2d");
-        //set color to black
-        this.ctx.fillStyle = "#00000099";
-        //set canvas black
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        this.clear();
     }
 
     draw(){

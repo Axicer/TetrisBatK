@@ -22,6 +22,8 @@ class Loader{
     loadEffects(){
         var status = document.getElementById("progress_status");
         status.innerHTML = "Loading effects...";
+        var progress = document.getElementById("bar");
+        progress.style.width = "1%";
         for(var name in EFFECTS_PATH){
             var audio = new Audio(EFFECTS_PATH[name].path);
             //when song is loaded and ready to play
@@ -52,6 +54,8 @@ class Loader{
     loadSongs(){
         var status = document.getElementById("progress_status");
         status.innerHTML = "Loading songs...";
+        var progress = document.getElementById("bar");
+        progress.style.width = "1%";
         for(var name in SONGS_PATH){
             var audio = new Audio(SONGS_PATH[name].path);
             //when song is loaded and ready to play
@@ -97,6 +101,8 @@ class Loader{
     loadTiles(){
         var status = document.getElementById("progress_status");
         status.innerHTML = "Loading tiles textures...";
+        var progress = document.getElementById("bar");
+        progress.style.width = "1%";
         //for each Tiles
         for(var name in TILES_PATHS){
             var img = new Image(TILE_SIZE, TILE_SIZE);
@@ -128,6 +134,8 @@ class Loader{
     loadBackgrounds(){
         var status = document.getElementById("progress_status");
         status.innerHTML = "Loading backgrounds...";
+        var progress = document.getElementById("bar");
+        progress.style.width = "1%";
         //for each Tiles
         for(var name in BACKGROUND_PATHS){
             var img = new Image();
