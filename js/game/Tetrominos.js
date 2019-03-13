@@ -119,6 +119,19 @@ class Tetrominos{
         if(!action)return false;
     }
 
+    clearAll(){
+      var main_canvas = document.getElementById("tetris_falling");
+      var main_ctx = main_canvas.getContext("2d");
+      var next_canvas = document.getElementById("tetris_next_tetrominos");
+      var next_ctx = next_canvas.getContext("2d");
+      var stored_canvas = document.getElementById("tetris_stored_tetrominos");
+      var stored_ctx = stored_canvas.getContext("2d");
+
+      main_ctx.clearRect(0,0,main_canvas.width, main_canvas.height);
+      next_ctx.clearRect(0,0,next_canvas.width, next_canvas.height);
+      stored_ctx.clearRect(0,0,stored_canvas.width, stored_canvas.height);
+    }
+
     draw(){
         //clear the canvas
         var canvas = document.getElementById("tetris_falling");

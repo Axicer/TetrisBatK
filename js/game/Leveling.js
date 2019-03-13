@@ -13,6 +13,19 @@ class Leveling{
         }
     }
 
+		reset(){
+				this.level = 1;
+				var level_elem = document.getElementById("tetris_level");
+				level_elem.innerHTML = this.level+ " (" + this.getLevel().name + ")";
+
+				var background_container = document.getElementById("background_div");
+				background_container.removeChild(background_container.firstChild);
+				background_div.appendChild(this.game.loader.getBackground(this.getLevel().imgId));
+
+				var line_elem = document.getElementById("tetris_line_cleared");
+				line_elem.innerHTML = 0;
+		}
+
     //update the level depending on the current amount of line given
     //return lines % 10
     updateLevel(lines){
@@ -22,17 +35,19 @@ class Leveling{
             level_elem.innerHTML = this.level+ " (" + this.getLevel().name + ")";
 
 						var background_container = document.getElementById("background_div");
-						background_container.removeChild(background_container.children[1]);
+						background_container.removeChild(background_container.firstChild);
 						background_div.appendChild(this.game.loader.getBackground(this.getLevel().imgId));
 
-            this.game.tetrominos.setGravityInterval(this.game.tetrominos.gravityTimeout/SPEED_INCREASE_FACTOR);
+						//set good gravity timeout from guideline (0.8-((Level-1)*0.007))^(Level-1)
+						this.game.tetrominos.gravityTimeout = Math.pow(0.8-((this.level-1)*0.007), (this.level-1))*1000;// *1000 is for millis
+						this.game.tetrominos.setGravityInterval(this.game.tetrominos.gravityTimeout);
             return lines%10;
         }
         return lines;
     }
 
     updateLines(lines){
-    	var line_elem = document.getElementById("tetris_line_cleared");
+    		var line_elem = document.getElementById("tetris_line_cleared");
         var old_lines = parseInt(line_elem.innerHTML);
         old_lines += lines;
         old_lines = this.updateLevel(old_lines);

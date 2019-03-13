@@ -1,9 +1,12 @@
 class Matrix{
 
+    //tab is a 2 dimension array representing the matrix
+    //WARINING: the matrix has to be a square (M == N)
     constructor(tab){
         this.tab = tab;
     }
 
+    //get a new counter clocwise rotated matrix from this matrix
     rotateCounterClockwise(){
         var mat = new Array(this.tab.length);
         for (var i = 0 ; i < this.tab.length ; i++){
@@ -25,6 +28,7 @@ class Matrix{
        return new Matrix(mat);
    }
 
+   //get a new clocwise rotated matrix from this matrix
    rotateClockwise() {
        var mat = new Array(this.tab.length);
        for (var i = 0 ; i < this.tab.length ; i++){

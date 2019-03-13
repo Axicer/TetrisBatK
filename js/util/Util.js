@@ -1,3 +1,4 @@
+//shout message for millis time in the divId element
 function shout(message, millis, divId = "shout"){
     var shout_elem = document.getElementById(divId);
     shout_elem.innerHTML = message;

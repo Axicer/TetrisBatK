@@ -1,6 +1,7 @@
 class Loader{
 
     constructor(controller){
+        //bind controller
         this.controller = controller;
         //tiles dictionnary
         this.tiles = [];
@@ -16,7 +17,9 @@ class Loader{
         this.loadedBackgroundCount = 0;
     }
 
+    //load all content
     loadAll(){
+        //call load effects with loadNextData to true
         this.loadEffects(true);
     }
 
@@ -25,6 +28,7 @@ class Loader{
         status.innerHTML = "Loading effects...";
         var progress = document.getElementById("bar");
         progress.style.width = "1%";
+        //load each audio
         for(var name in EFFECTS_PATH){
             var audio = new Audio(EFFECTS_PATH[name].path);
             //when song is loaded and ready to play

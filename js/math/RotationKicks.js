@@ -1,5 +1,5 @@
+//this is an implementation of Tetris Guideline Super Rotation System (SRS)
 //https://tetris.fandom.com/wiki/SRS
-
 function findRotation(tetrominos, askedState, right = true){
     if(tetrominos.name == "O")return;
     //get needed tests
@@ -25,8 +25,10 @@ function findRotation(tetrominos, askedState, right = true){
     return null;
 }
 
+//all rotations kicks for all pieces and all rotations
 var ROTATIONS = JSON.parse('{"standard":{"0>>1":[[0,0],[-1,0],[-1,1],[0,-2],[-1,-2]],"1>>0":[[0,0],[1,0],[1,-1],[0,2],[1,2]],"1>>2":[[0,0],[1,0],[1,-1],[0,2],[1,2]],"2>>1":[[0,0],[-1,0],[-1,1],[0,-2],[-1,-2]],"2>>3":[[0,0],[1,0],[1,1],[0,-2],[1,-2]],"3>>2":[[0,0],[-1,0],[-1,-1],[0,2],[-1,2]],"3>>0":[[0,0],[-1,0],[-1,-1],[0,2],[-1,2]],"0>>3":[[0,0],[1,0],[1,1],[0,-2],[1,-2]]},"bar":{"0>>1":[[0,0],[-2,0],[1,0],[-2,-1],[1,2]],"1>>0":[[0,0],[2,0],[-1,0],[2,1],[-1,-2]],"1>>2":[[0,0],[-1,0],[2,0],[-1,2],[2,-1]],"2>>1":[[0,0],[1,0],[-2,0],[1,-2],[-2,1]],"2>>3":[[0,0],[2,0],[-1,0],[2,1],[-1,-2]],"3>>2":[[0,0],[-2,0],[1,0],[-2,-1],[1,2]],"3>>0":[[0,0],[1,0],[-2,0],[1,-2],[-2,1]],"0>>3":[[0,0],[-1,0],[2,0],[-1,2],[1,-1]]}}');
 
+//true modulo for negative value as JavaScript fail doing his own function by default
 function mod(n, m) {
   return ((n % m) + m) % m;
 }

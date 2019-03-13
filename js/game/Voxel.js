@@ -1,5 +1,3 @@
-const SPEED_INCREASE_FACTOR = 1.25;
-
 class Voxel{
 
     constructor(game, width = 10, height = 20){

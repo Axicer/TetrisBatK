@@ -35,6 +35,13 @@ class Game{
         }
     }
 
+		reset(){
+			this.voxel.clear();
+			this.tetrominos.clearAll();
+			this.scoring.reset();
+			this.leveling.reset();
+		}
+
     handleArrows(ev){
         if(ev.keyCode == 27){
             //escape

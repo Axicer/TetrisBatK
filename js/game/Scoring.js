@@ -98,12 +98,17 @@ class Scoring{
         this.updateDisplay(score);
     }
 
-	fullClear(){
-		shout("FULL CLEAR", 800);
-	}
+		fullClear(){
+			shout("FULL CLEAR", 800);
+		}
+
+		reset(){
+				var score_elem = document.getElementById("tetris_score");
+				score_elem.innerHTML = 0;
+		}
 
     updateDisplay(incr){
-    	var score_elem = document.getElementById("tetris_score");
+    		var score_elem = document.getElementById("tetris_score");
         var score = parseInt(score_elem.innerHTML);
         score += incr;
         score_elem.innerHTML = score;
