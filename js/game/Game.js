@@ -43,31 +43,33 @@ class Game{
 		}
 
     handleArrows(ev){
-        if(ev.keyCode == 27){
-            //escape
+        if(ev.key == "Escape"){// pause
             this.pause();
         }
         if(this.ended || this.paused)return;
-        if(ev.keyCode == 37){
-            //left
+        if(ev.key == "ArrowLeft" ||
+				ev.key == "4"){//left shift
             this.tetrominos.move(-1, 0);
-        }else if(ev.keyCode == 38){
-            //up
+        }else if(ev.key == "ArrowUp" ||
+				ev.key == "x" ||
+				ev.key == "1" ||
+				ev.key == "5" ||
+				ev.key == "9"){// rotate clockwise
             this.tetrominos.rotateRight();
-        }else if(ev.keyCode == 39){
-            //right
+        }else if(ev.key == "ArrowRight" ||
+				ev.key == "6"){// right shift
             this.tetrominos.move(1, 0);
-        }else if(ev.keyCode == 40){
-            //down
+        }else if(ev.key == "ArrowDown" ||
+				ev.key == "2"){// soft drop
             this.tetrominos.move(0, 1);
-        }else if(ev.keyCode == 32){
-            //space
+        }else if(ev.code == "Space"){// hard drop
             this.tetrominos.hardDrop();
-        }else if(ev.keyCode == 90){
-            //Z
+        }else if(ev.key == "Control"||
+				ev.key == "z"){// rotate counterclockwise
             this.tetrominos.rotateLeft();
-        }else if(ev.keyCode == 16){
-            //shift
+        }else if(ev.key == "Shift" ||
+				ev.key == "c" ||
+				ev.key == "0"){// hold
             this.tetrominos.swapTetrominos();
         }
     }
