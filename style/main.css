@@ -9,10 +9,10 @@
     font-family: tetris;
 }
 
-body{
+/*body{
     background: url(../res/background/libre-service.JPG);
     background-size: cover;
-}
+}*/
 
 #tetris{
     position: absolute;
@@ -288,4 +288,17 @@ body{
     width: 1%;
     height: 30px;
     background-color: green;
+}
+
+#background_div{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+#background_div > img{
+    position: absolute;
+    z-index: -11;
+    width: 100%;
+    height: 100%;
 }

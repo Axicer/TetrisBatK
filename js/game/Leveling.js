@@ -20,7 +20,10 @@ class Leveling{
             this.level++;
             var level_elem = document.getElementById("tetris_level");
             level_elem.innerHTML = this.level+ " (" + this.getLevel().name + ")";
-			document.body.style.backgroundImage = "url(" + this.game.loader.getBackground(this.getLevel().imgId).src + ")";
+
+						var background_container = document.getElementById("background_div");
+						background_container.removeChild(background_container.children[1]);
+						background_div.appendChild(this.game.loader.getBackground(this.getLevel().imgId));
 
             this.game.tetrominos.setGravityInterval(this.game.tetrominos.gravityTimeout/SPEED_INCREASE_FACTOR);
             return lines%10;
