@@ -23,7 +23,7 @@ For more informations, have a look at <https://tetris.fandom.com/wiki/Tetris_Gui
 
 ## Tetris® guideline
 
-__Tetris® School__ is following the official Tetris® guideline
+__Tetris® School__ is following the official Tetris® guideline.  
 This means that __Tetris® School__ uses:
 
 - The Super Rotation System (SRS)
@@ -42,18 +42,18 @@ This means that __Tetris® School__ uses:
 
 
 ## Legal copyrights
-Tetris ® & © 1985~2019 Tetris Holding, LLC.
-Tetris logo, Tetris theme song and Tetriminos are trademarks of Tetris Holding, LLC.
-Licensed to The Tetris Company.
-Game Design by Alexey Pajitnov.
-Logo Design by Roger Dean.
-All Rights Reserved.
+Tetris ® & © 1985~2019 Tetris Holding, LLC.  
+Tetris logo, Tetris theme song and Tetriminos are trademarks of Tetris Holding, LLC.  
+Licensed to The Tetris Company.  
+Game Design by Alexey Pajitnov.  
+Logo Design by Roger Dean.  
+All Rights Reserved.  
 
-"Bulky Pixels" font designed by Smoking Drum (www.smokingdrum.com).
-"Kernel Panic NBP" font designed by Nate Halley.
+"Bulky Pixels" font designed by Smoking Drum (www.smokingdrum.com).  
+"Kernel Panic NBP" font designed by Nate Halley.  
 
 ## Usefull links
 
-__The Tetris Company__ website: <https://tetris.com>
-__Tetris®__ official Wikipedia: <https://tetris.fandom.com/wiki/Tetris_Wiki>
-__UIT of Montpellier/Sète__ website: <https://iut-montpellier-sete.edu.umontpellier.fr/>
+__The Tetris Company__ website: <https://tetris.com>  
+__Tetris®__ official Wikipedia: <https://tetris.fandom.com/wiki/Tetris_Wiki>  
+__UIT of Montpellier/Sète__ website: <https://iut-montpellier-sete.edu.umontpellier.fr/>  
