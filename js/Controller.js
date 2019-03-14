@@ -35,9 +35,6 @@ class Controller{
 
                     //create game
                     self.game = new Game(self.loader);
-                    document.addEventListener("keydown", function(ev){
-                        self.game.handleArrows(ev);
-                    });
 
 
                     //load song
