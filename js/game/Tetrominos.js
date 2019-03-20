@@ -49,9 +49,9 @@ class Tetrominos{
             //swap the current tetrominos and the swap slot
             var tmp = self.swap;
             self.swap = {matrix:self.matrix, tile:self.tile, name:self.name, rotationState:self.rotationState};
-            self.matrix = self.matrix;
-            self.tile = self.tile;
-            self.name = self.name;
+            self.matrix = tmp.matrix;
+            self.tile = tmp.tile;
+            self.name = tmp.name;
             self.rotationState = tmp.rotationState;
             //reset the location
             self.location = [parseInt(self.game.voxel.width/2)-2, -1];

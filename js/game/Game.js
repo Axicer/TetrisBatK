@@ -125,31 +125,34 @@ class Game{
 			this.tetris_falling.width = "320";
 			this.tetris_falling.height = "640";
 			this.tetris_falling.classList.add("tetris_falling");
+			this.tetris_falling.classList.add("stack");
 
 			//create voxel canvas
 			this.tetris_voxel = document.createElement("canvas");
 			this.tetris_voxel.width = "320";
 			this.tetris_voxel.height = "640";
 			this.tetris_voxel.classList.add("tetris_voxel");
+			this.tetris_voxel.classList.add("stack");
 
 			//create pause text
 			this.pauseText = document.createElement("p");
 			this.pauseText.innerHTML = "PAUSE";
-			this.pauseText.classList.add("font-tetris");
+			this.pauseText.classList.add("pause");
 
 			//create restart button
 			this.restartButton = document.createElement("button");
 			this.restartButton.innerHTML = "RESTART";
-			this.restartButton.onClick = restart;
+			this.restartButton.addEventListener("click", function(){
+				restart();
+			});
+			this.restartButton.classList.add("restart_btn");
 
 			//create show text
 			this.showText = document.createElement("p");
-			this.showText.classList.add("font-tetris");
 			this.showText.classList.add("showText");
 
 			//create b2b text
 			this.b2bText = document.createElement("p");
-			this.b2bText.classList.add("font-tetris");
 			this.b2bText.classList.add("b2bText");
 
 			//append elements
@@ -170,6 +173,7 @@ class Game{
 
 			//create right up container
 			this.infoContainerRightUp = document.createElement("div");
+			this.infoContainerRightUp.classList.add("info_right_up");
 
 				//create NEXT text
 				this.nextContainerP = document.createElement("p");
@@ -188,6 +192,7 @@ class Game{
 
 			//create container right down
 			this.infoContainerRightDown = document.createElement("div");
+			this.infoContainerRightDown.classList.add("info_right_down");
 
 				//create SCORE text
 				this.scoreContainerP = document.createElement("p");
@@ -247,6 +252,7 @@ class Game{
     }
 
 		reset(){
+			document.body.removeChild(this.gameContainer);
 			this.voxel.clear();
 			this.tetrominos.clearAll(this.tetrominos);
 			this.scoring.reset();

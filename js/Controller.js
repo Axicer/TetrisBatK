@@ -82,8 +82,7 @@ class Controller{
 
     //restart a new game
     restart(){
-        var restart_btn = document.getElementById("restart_btn");
-        restart_btn.style.visibility = "hidden";
+        this.game.restartButton.style.visibility = "hidden";
         this.game.reset();
         this.game = new Game(this.loader);
     }

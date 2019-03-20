@@ -106,7 +106,7 @@ class Scoring{
 		}
 
 		reset(){
-				score_elem.innerHTML = 0;
+				this.score_elem.innerHTML = 0;
 		}
 
     updateDisplay(incr){

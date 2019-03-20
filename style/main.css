@@ -14,7 +14,7 @@
     background-size: cover;
 }*/
 
-#tetris{
+.tetris{
     position: absolute;
     left: 0;
     right: 0;
@@ -32,38 +32,46 @@
     grid-column-gap: 5px;
 }
 
-.center{
+.info_center{
     grid-area: center;
-}
-
-.right{
-    grid-area: right;
-}
-
-.left{
-    grid-area: left;
-}
-
-.stack{
-    position: absolute;
-    top: 0;
-}
-#tetris_center{
     position: relative;
     height: 640px;
     width: 320px;
     border: 5px solid grey;
 }
 
-#tetris_canvas{
+.info_right{
+    grid-area: right;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.info_left{
+    grid-area: left;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.stack{
+    position: absolute;
+    top: 0;
+}
+
+.tetris_voxel{
     z-index: 0;
 }
 
-#tetris_falling{
+.tetris_falling{
     z-index: 1;
 }
 
-#pause{
+.pause{
     color: white;
     font-size: 25px;
     align-items: center;
@@ -78,7 +86,7 @@
     visibility: hidden;
 }
 
-#restart_btn{
+.restart_btn{
     position: absolute;
     left: 0;
     right: 0;
@@ -96,19 +104,11 @@
     border: 2px solid white;
 }
 
-#restart_btn:hover{
+.restart_btn:hover{
     background-color: rgba(255,255,255,0.1);
 }
 
-#tetris_left{
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-#tetris_left_up{
+.info_left_up{
     background-color: black;
     border: 5px solid grey;
     display: flex;
@@ -117,12 +117,12 @@
     justify-content: center;
 }
 
-#tetris_left_up > p{
+.info_left_up > p{
     font-size: 40px;
     color: white;
 }
 
-#tetris_left_down > *{
+.info_left_down > *{
     background-color: black;
     color: white;
     border: 3px solid grey;
@@ -130,27 +130,19 @@
     padding: 5px;
 }
 
-#tetris_left_down > * > *{
+.info_left_down > * > *{
     font-size: 20px;
 }
 
-#tetris_left_down > * > *:last-child{
+.info_left_down > * > *:last-child{
     text-align: right;
 }
 
-#tetris_left_down > *:last-child > *:last-child{
+.info_left_down > *:last-child > *:last-child{
     font-size: 15px;
 }
 
-#tetris_right{
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-#tetris_right_up{
+.info_right_up{
     background-color: black;
     border: 5px solid grey;
     display: flex;
@@ -159,24 +151,24 @@
     justify-content: center;
 }
 
-#tetris_right_up > p{
+.info_right_up > p{
     font-size: 40px;
     color: white;
 }
 
-#tetris_right_down > *{
+.info_right_down{
     background-color: black;
-    color: white;
     border: 3px solid grey;
     height: 60px;
     padding: 5px;
 }
 
-#tetris_right_down > * > *{
+.info_right_down > *{
+    color: white;
     font-size: 20px;
 }
 
-#tetris_right_down > * > *:last-child{
+.info_right_down > *:last-child{
     text-align: right;
 }
 
@@ -221,7 +213,7 @@
   cursor: pointer;
 }
 
-#shout{
+.showText{
     color: white;
     font-size: 25px;
     align-items: center;
@@ -236,7 +228,7 @@
     visibility: hidden;
 }
 
-#b2b{
+.b2bText{
     color: white;
     font-size: 25px;
     align-items: center;
