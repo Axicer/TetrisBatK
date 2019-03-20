@@ -102,8 +102,7 @@ class Tetrominos{
                 if(this.matrix.tab[y][x] == 1){
                     var coordX = self.location[0]+x;
                     var coordY = self.location[1]+y;
-                    if(self.game.voxel.isOutsideTop(coordX, coordY+1) ||
-                        self.game.voxel.isOutsideBottom(coordX, coordY+1) ||
+                    if(self.game.voxel.isOutsideBottom(coordX, coordY+1) ||
                         self.game.voxel.get(coordX, coordY+1) != null){
                         if(action){
                             //lock the tetrominos to the voxel
@@ -299,7 +298,12 @@ class Tetrominos{
                 if(mat.tab[y][x] == 1){
                     var coordX = self.location[0] + x + dx;
                     var coordY = self.location[1] + y + dy;
-                    if(!self.game.voxel.isInside(coordX, coordY) && !self.game.voxel.isOutsideTop(coordX, coordY)){
+
+                    var oobBot = self.game.voxel.isOutsideBottom(coordX, coordY);
+                    var oobLeft = self.game.voxel.isOutsideLeft(coordX, coordY);
+                    var oobRight = self.game.voxel.isOutsideRight(coordX, coordY);
+
+                    if(oobBot || oobLeft || oobRight){
                         return true;
                     }
                 }

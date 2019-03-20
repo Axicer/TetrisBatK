@@ -8,11 +8,19 @@ class Game{
 		this.lastAction = null;
 		this.ended = false;
 		this.paused = false;
-
+		this.keyboardHandler = new KeyboardHandler();
 		this.voxel = new Voxel(this, this.tetris_voxel);
 		this.tetrominos = new Tetrominos(this, this.tetris_falling, this.nextCanvas, this.holdCanvas);
 		this.scoring = new Scoring(this, this.scoreText, this.showText, this.b2bText);
 		this.leveling = new Leveling(this, this.levelText, this.lineText);
+
+		var self = this;
+		this.checkControlInterval = setInterval(function(){
+			self.checkDASControl(self);
+		}, DAS_SPEED);
+		window.addEventListener("keydown", function(ev){
+			self.checkKeys(self, ev);
+		});
 	}
 
 	createContainers(){
@@ -233,6 +241,7 @@ class Game{
         if(!this.ended){
             console.log("fin du jeu !");
             this.ended = true;
+						clearInterval(this.checkControlInterval);
             this.restartButton.style.visibility = "visible";
         }
     }
@@ -244,77 +253,55 @@ class Game{
 			this.leveling.reset();
 		}
 
-    handleArrows(ev){
-        if(ev.keyCode == 27){
-            //escape
-            this.pause();
-        }
-        if(this.ended || this.paused)return;
-        if(ev.keyCode == 37){
-            //left
-            this.tetrominos.move(-1, 0, true, this.tetrominos);
-        }else if(ev.keyCode == 38){
-            //up
-            this.tetrominos.rotateRight(this.tetrominos);
-        }else if(ev.keyCode == 39){
-            //right
-            this.tetrominos.move(1, 0, true, this.tetrominos);
-        }else if(ev.keyCode == 40){
-            //down
-            this.tetrominos.move(0, 1, true, this.tetrominos);
-        }else if(ev.keyCode == 32){
-            //space
-            this.tetrominos.hardDrop(this.tetrominos);
-        }else if(ev.keyCode == 90){
-            //Z
-            this.tetrominos.rotateLeft(this.tetrominos);
-        }else if(ev.keyCode == 16){
-            //shift
-            this.tetrominos.swapTetrominos(this.tetrominos);
-        }
-	}
+		checkDASControl(self){
+			if(self.ended || self.paused)return;
+			if(self.keyboardHandler.dasKeys["ArrowLeft"] ||
+					self.keyboardHandler.dasKeys["4"]){//left shift
+          	self.tetrominos.move(-1, 0, true, this.tetrominos);
+    	}else if(self.keyboardHandler.dasKeys["ArrowRight"] ||
+					self.keyboardHandler.dasKeys["6"]){// right shift
+            self.tetrominos.move(1, 0, true, this.tetrominos);
+      }
+		}
 
-	/**
-	*	check for keys in keydown event (not affected by DAS)
-	*/
-    checkKeys(self, ev){
-		if(ev.key == "Escape" && self.keyboardHandler.keysOnce["Escape"]){// pause
-		   self.pause();
-	   }
-	   if(self.ended || self.paused)return;
-	   //SHIFT
-	   if(self.keyboardHandler.keysOnce["ArrowLeft"] ||
-			   self.keyboardHandler.keysOnce["4"]){//left shift
-		   self.tetrominos.move(-1, 0);
-	   }else if(self.keyboardHandler.keysOnce["ArrowRight"] ||
-			   self.keyboardHandler.keysOnce["6"]){// right shift
-		   self.tetrominos.move(1, 0);
-	   }
-	   if(ev.key == "ArrowDown" ||
-	   		ev.key == "2"){// soft drop
-		   self.tetrominos.move(0, 1);
-	   }
+		checkKeys(self, ev){
+			if(ev.key == "Escape" && self.keyboardHandler.keysOnce["Escape"]){// pause
+			   self.pause();
+		   }
+		   if(self.ended || self.paused)return;
+		   //SHIFT
+		   if(self.keyboardHandler.keysOnce["ArrowLeft"] ||
+				   self.keyboardHandler.keysOnce["4"]){//left shift
+			   self.tetrominos.move(-1, 0, true, this.tetrominos);
+		   }else if(self.keyboardHandler.keysOnce["ArrowRight"] ||
+				   self.keyboardHandler.keysOnce["6"]){// right shift
+			   self.tetrominos.move(1, 0, true, this.tetrominos);
+		   }
+		   if(ev.key == "ArrowDown" ||
+		   		ev.key == "2"){// soft drop
+			   self.tetrominos.move(0, 1, true, this.tetrominos);
+		   }
 
-	   //ROTATIONS
-	   if(ev.key == "ArrowUp" ||
-		   ev.key == "x" ||
-		   ev.key == "1" ||
-		   ev.key == "5" ||
-		   ev.key == "9"){// rotate clockwise
-		   self.tetrominos.rotateRight();
-	   }else if(ev.key == "Control" ||
-			   ev.key == "z"){// rotate counterclockwise
-		   self.tetrominos.rotateLeft();
-	   }
+		   //ROTATIONS
+		   if(ev.key == "ArrowUp" ||
+			   ev.key == "x" ||
+			   ev.key == "1" ||
+			   ev.key == "5" ||
+			   ev.key == "9"){// rotate clockwise
+			   self.tetrominos.rotateRight(this.tetrominos);
+		   }else if(ev.key == "Control" ||
+				   ev.key == "z"){// rotate counterclockwise
+			   self.tetrominos.rotateLeft(this.tetrominos);
+		   }
 
-	   //OTHERS
-	   if(ev.code == "Space"){// hard drop
-		   self.tetrominos.hardDrop();
-	   }else if(ev.key == "Shift" ||
-			   ev.key == "c" ||
-			   ev.key == "0"){// hold
-		   self.tetrominos.swapTetrominos();
-	   }
+		   //OTHERS
+		   if(ev.code == "Space"){// hard drop
+			   self.tetrominos.hardDrop(this.tetrominos);
+		   }else if(ev.key == "Shift" ||
+				   ev.key == "c" ||
+				   ev.key == "0"){// hold
+			   self.tetrominos.swapTetrominos(this.tetrominos);
+		   }
     }
 }
 

@@ -36,7 +36,6 @@ class Controller{
                     //create game
                     self.game = new Game(self.loader);
 
-
                     //load song
                     self.currentSong = self.loader.getRandomSong();
                     self.loader.setMainVolume(0.1);
