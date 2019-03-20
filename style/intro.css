@@ -1,0 +1,39 @@
+#legal-notice{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    color: white;
+    background-color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+
+    -webkit-transition: opacity 1s ease-in-out;
+    -moz-transition: opacity 1s ease-in-out;
+    -ms-transition: opacity 1s ease-in-out;
+    -o-transition: opacity 1s ease-in-out;
+}
+
+#legal-notice p{
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+#legal-notice img{
+    width: 20%;
+}
+
+.players{
+    margin: 5px;
+}
+
+.retour{
+    margin-top: 20px;
+    display: none;
+}
