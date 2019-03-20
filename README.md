@@ -36,6 +36,7 @@ This means that __Tetris® School__ uses:
 - A variant of Roger Dean's Tetris logo
 - Half second lock delay <https://tetris.fandom.com/wiki/Lock_delay>
 - Scoring system <https://tetris.fandom.com/wiki/Scoring>
+- DAS system <https://tetris.fandom.com/wiki/DAS>
 - etc..
 
  For more details, please look at the official guideline <https://tetris.fandom.com/wiki/Tetris_Guideline>
