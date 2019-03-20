@@ -174,7 +174,7 @@ class Loader{
             status.innerHTML = "All loaded.";
 
             this.controller.canReleaseLegalNotice = true;
-        }else{
+        }else if(percent == 100){
             var status = document.getElementById("progress_status");
             status.innerHTML = "Backgrounds loaded.";
         }

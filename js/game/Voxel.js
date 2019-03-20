@@ -36,11 +36,14 @@ class Voxel{
     isInside(x, y){
         return !(x < 0 || x >= this.width || y < 0 || y >= this.height);
     }
-    isOutsideTop(x, y){
-        return y < 0;
-    }
     isOutsideBottom(x, y){
         return y >= this.height;
+    }
+    isOutsideLeft(x, y){
+        return x < 0;
+    }
+    isOutsideRight(x, y){
+        return x >= this.width;
     }
 
     get(x, y){

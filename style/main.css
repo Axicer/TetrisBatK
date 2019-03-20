@@ -271,8 +271,7 @@
     -o-transition: opacity 1s ease-in-out;
 }
 
-#legal-notice > p{
-    width: 50%;
+#legal-notice p{
     text-align: center;
     display: flex;
     align-items: center;
@@ -280,7 +279,7 @@
 }
 
 #legal-notice img{
-  width: 50%;
+    width: 20%;
 }
 
 #progress{
