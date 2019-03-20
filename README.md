@@ -26,16 +26,16 @@ For more informations, have a look at <https://tetris.fandom.com/wiki/Tetris_Gui
 __Tetris® School__ is following the official Tetris® guideline.  
 This means that __Tetris® School__ uses:
 
-- The Super Rotation System (SRS)
+- The Super Rotation System (SRS) <https://tetris.fandom.com/wiki/SRS>
 - Tetrominos colors and shapes
 - Standard mappings for computer keyboards
-- 7-bag Random Generator
-- Hold piece
+- 7-bag Random Generator <https://tetris.fandom.com/wiki/Random_Generator>
+- Hold piece <https://tetris.fandom.com/wiki/Hold_piece>
 - Default sound effects
-- Ghost piece function
+- Ghost piece function <https://tetris.fandom.com/wiki/Ghost_piece>
 - A variant of Roger Dean's Tetris logo
-- Half second lock delay.
-- Scoring system
+- Half second lock delay <https://tetris.fandom.com/wiki/Lock_delay>
+- Scoring system <https://tetris.fandom.com/wiki/Scoring>
 - etc..
 
  For more details, please look at the official guideline <https://tetris.fandom.com/wiki/Tetris_Guideline>
