@@ -14,9 +14,9 @@ function findRotation(tetrominos, askedState, right = true){
     //testing all possibilities
     for(var i = 0 ; i < rotations.length ; i++){
         //get whether the piece is OOB
-        var oob = tetrominos.isOOB(rotations[i][0], -rotations[i][1], m);
+        var oob = tetrominos.isOOB(rotations[i][0], -rotations[i][1], m, tetrominos);
         //get whether the piece is at an impossible place (there's already a tile somewhere)
-        var data = tetrominos.alreadyContainsData(rotations[i][0], -rotations[i][1], m);
+        var data = tetrominos.alreadyContainsData(rotations[i][0], -rotations[i][1], m, tetrominos);
         if(!oob && !data){
             //return the rotated matrix, and the valid wall kicks
             return [m, rotations[i][0], -rotations[i][1]];

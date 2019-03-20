@@ -279,6 +279,10 @@
     justify-content: center;
 }
 
+#legal-notice img{
+  width: 50%;
+}
+
 #progress{
     width: 320px;
     text-align: center;

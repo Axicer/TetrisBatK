@@ -1,8 +1,11 @@
 class Scoring{
 
-	constructor(game){
+	constructor(game, score_elem, shout_elem, shout_b2b_elem){
 		this.score = 0;
 		this.game = game;
+		this.score_elem = score_elem;
+		this.shout_elem = shout_elem;
+		this.shout_b2b_elem = shout_b2b_elem;
 	}
 
 	updateScore(lines, hasFullClear = false){
@@ -17,24 +20,24 @@ class Scoring{
                     case 0: //tspin no line
                         score += 400*this.game.leveling.level;
                         this.game.lastAction = T_SPIN_NO_LINES;
-                        shout("T-Spin !", 800);
+                        this.shout("T-Spin !", 800, this.shout_elem);
                         break;
                     case 1:// tspin single
                         score += 800*this.game.leveling.level;
                         this.game.lastAction = T_SPIN_SINGLE;
-                        shout("T-Spin Single !", 800);
+                        this.shout("T-Spin Single !", 800, this.shout_elem);
                         canB2B = true;
                         break;
                     case 2:// tspin double
                         score += 1200*this.game.leveling.level;
                         this.game.lastAction = T_SPIN_DOUBLE;
-                        shout("T-Spin Double !", 800);
+                        this.shout("T-Spin Double !", 800, this.shout_elem);
                         canB2B = true;
                         break;
                     case 3://tspin triple
                         score += 1600*this.game.leveling.level;
                         this.game.lastAction = T_SPIN_TRIPLE;
-                        shout("T-Spin Triple !", 800);
+                        this.shout("T-Spin Triple !", 800, this.shout_elem);
                         canB2B = true;
                         break;
                     default:break;
@@ -45,17 +48,17 @@ class Scoring{
                     case 0: //tspin mini no line
                         score += 100*this.game.leveling.level;
                         this.game.lastAction = T_SPIN_MINI_NO_LINES;
-                        shout("Mini T-Spin !", 800);
+                        this.shout("Mini T-Spin !", 800, this.shout_elem);
                         break;
                     case 1:// tspin mini single
                         score += 200*this.game.leveling.level;
                         this.game.lastAction = T_SPIN_MINI_SINGLE;
-                        shout("Mini T-Spin Single !", 800);
+                        this.shout("Mini T-Spin Single !", 800, this.shout_elem);
                         break;
                     case 2://tspin mini double
                         score += 400*this.game.leveling.level;
                         this.game.lastAction = T_SPIN_MINI_DOUBLE;
-                        shout("Mini T-Spin Double !", 800);
+                        this.shout("Mini T-Spin Double !", 800, this.shout_elem);
                         break;
                     default:break;
                 }
@@ -77,7 +80,7 @@ class Scoring{
                 case 4://tetris
                     score += 800*this.game.leveling.level;
                     this.game.lastAction = TETRIS;
-                    shout("Tetris !", 800);
+                    this.shout("Tetris !", 800, this.shout_elem);
                     canB2B = true;
                     break;
                 default:break;
@@ -90,7 +93,7 @@ class Scoring{
             beforeAction == T_SPIN_TRIPLE ||
             beforeAction == TETRIS)){
             //it's back to back
-            shout("BACK-TO-BACK !", 800, "b2b");
+            this.shout("BACK-TO-BACK !", 800, this.shout_b2b_elem);
             score *= 3.0/2.0;
         }
 
@@ -99,19 +102,27 @@ class Scoring{
     }
 
 		fullClear(){
-			shout("FULL CLEAR", 800);
+			this.shout("FULL CLEAR", 800, this.shout_elem);
 		}
 
 		reset(){
-				var score_elem = document.getElementById("tetris_score");
 				score_elem.innerHTML = 0;
 		}
 
     updateDisplay(incr){
-    		var score_elem = document.getElementById("tetris_score");
-        var score = parseInt(score_elem.innerHTML);
+        var score = parseInt(this.score_elem.innerHTML);
         score += incr;
-        score_elem.innerHTML = score;
+        this.score_elem.innerHTML = score;
     }
+
+		shout(message, millis, elem){
+		    elem.innerHTML = message;
+		    elem.style.visibility = "visible";
+		    setTimeout((function(elem, self){
+		        return function(){
+		            elem.style.visibility = "hidden";
+		        }
+		    })(elem, this), millis);
+		}
 
 }

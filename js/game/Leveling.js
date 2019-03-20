@@ -1,8 +1,10 @@
 class Leveling{
 
-	constructor(game){
+	constructor(game, level_elem, line_elem){
 		this.game = game;
 		this.level = 1;
+		this.level_elem = level_elem;
+		this.line_elem = line_elem;
 	}
 
 	getLevel(level){
@@ -15,14 +17,13 @@ class Leveling{
 
 		reset(){
 				this.level = 1;
-				var level_elem = document.getElementById("tetris_level");
 				level_elem.innerHTML = this.level+ " (" + this.getLevel().name + ")";
 
+				//TODO
 				var background_container = document.getElementById("background_div");
 				background_container.removeChild(background_container.firstChild);
 				background_div.appendChild(this.game.loader.getBackground(this.getLevel().imgId));
 
-				var line_elem = document.getElementById("tetris_line_cleared");
 				line_elem.innerHTML = 0;
 		}
 
@@ -31,9 +32,9 @@ class Leveling{
     updateLevel(lines){
         if(lines >= 10){
             this.level++;
-            var level_elem = document.getElementById("tetris_level");
             level_elem.innerHTML = this.level+ " (" + this.getLevel().name + ")";
 
+						//TODO
 						var background_container = document.getElementById("background_div");
 						background_container.removeChild(background_container.firstChild);
 						background_div.appendChild(this.game.loader.getBackground(this.getLevel().imgId));
@@ -47,11 +48,10 @@ class Leveling{
     }
 
     updateLines(lines){
-    		var line_elem = document.getElementById("tetris_line_cleared");
-        var old_lines = parseInt(line_elem.innerHTML);
+        var old_lines = parseInt(this.line_elem.innerHTML);
         old_lines += lines;
         old_lines = this.updateLevel(old_lines);
-        line_elem.innerHTML = old_lines;
+        this.line_elem.innerHTML = old_lines;
     }
 }
 

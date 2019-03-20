@@ -1,13 +1,13 @@
 class Voxel{
 
-    constructor(game, width = 10, height = 20){
+    constructor(game, voxel_canvas){
         this.game = game;
 
-        this.canvas = document.getElementById("tetris_canvas");
-        this.width = width;
-        this.height = height;
-        this.content = new Array(height);
-        for (var i = 0 ; i < height ; i++)this.content[i]=new Array(width);
+        this.canvas = voxel_canvas;
+        this.width = 10;
+        this.height = 20;
+        this.content = new Array(this.height);
+        for (var i = 0 ; i < this.height ; i++)this.content[i]=new Array(this.width);
         this.ctx = this.canvas.getContext("2d");
         this.clear();
     }

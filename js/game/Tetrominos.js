@@ -1,8 +1,13 @@
 class Tetrominos{
 
-    constructor(game){
+    constructor(game, falling_canvas, next_canvas, hold_canvas){
         this.loader = game.loader;
         this.game = game;
+
+        this.falling_canvas = falling_canvas;
+        this.next_canvas = next_canvas;
+        this.hold_canvas = hold_canvas;
+
         //the spawner of tetrominos
         this.spawner = new Spawner(game.loader);
         //the next tetrominos wich will spawn
@@ -12,102 +17,102 @@ class Tetrominos{
 
         this.checkTimeout = -1;
         //set matrix, tile, and position from this.next
-        this.reset();
+        this.reset(this);
         //start gravity
-        this.setGravityInterval(1000);
+        this.setGravityInterval(1000, this);
     }
 
-    setGravityInterval(millis){
+    setGravityInterval(millis, self){
         //set the timeout
-        this.gravityTimeout = millis
+        self.gravityTimeout = millis
         //if the timeout is already running, clear the interval
-        if(this.gravityInterval != null)clearInterval(this.gravityInterval);
+        if(self.gravityInterval != null)clearInterval(self.gravityInterval);
         //set the interval
-        this.gravityInterval = setInterval((function(self){
+        self.gravityInterval = setInterval((function(self){
             return function(){
                 //apply gravity
-                self.gravity();
+                self.gravity(self);
             }
-        })(this), this.gravityTimeout);
+        })(self), this.gravityTimeout);
     }
 
-    swapTetrominos(){
+    swapTetrominos(self){
         //if swap has already occurs then return
-        if(this.hasSwapped)return;
-        if(this.swap == null){
+        if(self.hasSwapped)return;
+        if(self.swap == null){
             //swap slot is empty
             //set swap to current tetrominos
-            this.swap = {matrix:this.matrix, tile:this.tile, name:this.name, rotationState:this.rotationState};
+            self.swap = {matrix:self.matrix, tile:self.tile, name:self.name, rotationState:self.rotationState};
             //spawn the next tetrominos
-            this.reset();
+            self.reset(self);
         }else{
             //swap the current tetrominos and the swap slot
-            var tmp = this.swap;
-            this.swap = {matrix:this.matrix, tile:this.tile, name:this.name, rotationState:this.rotationState};
-            this.matrix = tmp.matrix;
-            this.tile = tmp.tile;
-            this.name = tmp.name;
-            this.rotationState = tmp.rotationState;
+            var tmp = self.swap;
+            self.swap = {matrix:self.matrix, tile:self.tile, name:self.name, rotationState:self.rotationState};
+            self.matrix = self.matrix;
+            self.tile = self.tile;
+            self.name = self.name;
+            self.rotationState = tmp.rotationState;
             //reset the location
-            this.location = [parseInt(this.game.voxel.width/2)-2, -1];
+            self.location = [parseInt(self.game.voxel.width/2)-2, -1];
         }
         this.hasSwapped = true;
-        this.draw();
+        this.draw(self);
     }
 
-    reset(){
-        this.matrix = this.next.matrix;
-        this.tile = this.next.tile;
-        this.name = this.next.name;
-        this.rotationState = 0;
-        this.next = this.spawner.get();
-        this.location = [parseInt(this.game.voxel.width/2)-2, -1];
+    reset(self){
+        self.matrix = self.next.matrix;
+        self.tile = self.next.tile;
+        self.name = self.next.name;
+        self.rotationState = 0;
+        self.next = self.spawner.get();
+        self.location = [parseInt(self.game.voxel.width/2)-2, -1];
     }
 
-    gravity(){
+    gravity(self){
         //move 1 down
-        this.move(0, 1, false);
+        self.move(0, 1, false, self);
 
-        if(this.checkLock(0,0, false)){
-            this.resetLockTimeout();
+        if(self.checkLock(false, self)){
+            self.resetLockTimeout(self);
         }
     }
 
-    cancelLockTimeout(){
-        if(this.checkTimeout != -1){
-            clearTimeout(this.checkTimeout);
-            this.checkTimeout = -1;
+    cancelLockTimeout(self){
+        if(self.checkTimeout != -1){
+            clearTimeout(self.checkTimeout);
+            self.checkTimeout = -1;
         }
     }
 
-    resetLockTimeout(){
-        if(this.checkTimeout != -1)return;
+    resetLockTimeout(self){
+        if(self.checkTimeout != -1)return;
 
-        this.checkTimeout = setTimeout((function(self){
+        self.checkTimeout = setTimeout((function(self){
             return function(){
-                self.checkLock();
+                self.checkLock(true, self);
                 self.checkTimeout = -1;
             }
-        })(this), 500);
+        })(self), 500);
     }
 
-    checkLock(action = true){
-        for(var y = 0 ; y < this.matrix.tab.length ; y++){
-            for(var x = 0 ; x < this.matrix.tab[y].length ; x++){
+    checkLock(action = true, self){
+        for(var y = 0 ; y < self.matrix.tab.length ; y++){
+            for(var x = 0 ; x < self.matrix.tab[y].length ; x++){
                 if(this.matrix.tab[y][x] == 1){
-                    var coordX = this.location[0]+x;
-                    var coordY = this.location[1]+y;
-                    if(this.game.voxel.isOutsideTop(coordX, coordY+1) ||
-                        this.game.voxel.isOutsideBottom(coordX, coordY+1) ||
-                        this.game.voxel.get(coordX, coordY+1) != null){
+                    var coordX = self.location[0]+x;
+                    var coordY = self.location[1]+y;
+                    if(self.game.voxel.isOutsideTop(coordX, coordY+1) ||
+                        self.game.voxel.isOutsideBottom(coordX, coordY+1) ||
+                        self.game.voxel.get(coordX, coordY+1) != null){
                         if(action){
                             //lock the tetrominos to the voxel
-                            this.lock();
-                            this.game.voxel.checkLines();
+                            self.lock(self);
+                            self.game.voxel.checkLines();
                             //reset tetrominos
-                            this.hasSwapped = false;
-                            this.reset();
-                            this.draw();
+                            self.hasSwapped = false;
+                            self.reset(self);
+                            self.draw(self);
                             return;
                         }else{
                             return true;
@@ -119,32 +124,28 @@ class Tetrominos{
         if(!action)return false;
     }
 
-    clearAll(){
-      var main_canvas = document.getElementById("tetris_falling");
-      var main_ctx = main_canvas.getContext("2d");
-      var next_canvas = document.getElementById("tetris_next_tetrominos");
-      var next_ctx = next_canvas.getContext("2d");
-      var stored_canvas = document.getElementById("tetris_stored_tetrominos");
-      var stored_ctx = stored_canvas.getContext("2d");
+    clearAll(self){
+      var main_ctx = self.falling_canvas.getContext("2d");
+      var next_ctx = self.next_canvas.getContext("2d");
+      var hold_ctx = self.hold_canvas.getContext("2d");
 
-      main_ctx.clearRect(0,0,main_canvas.width, main_canvas.height);
-      next_ctx.clearRect(0,0,next_canvas.width, next_canvas.height);
-      stored_ctx.clearRect(0,0,stored_canvas.width, stored_canvas.height);
+      main_ctx.clearRect(0,0,self.falling_canvas.width, self.falling_canvas.height);
+      next_ctx.clearRect(0,0,self.next_canvas.width, self.next_canvas.height);
+      hold_ctx.clearRect(0,0,self.hold_canvas.width, self.hold_canvas.height);
     }
 
-    draw(){
+    draw(self){
         //clear the canvas
-        var canvas = document.getElementById("tetris_falling");
-        var ctx = canvas.getContext("2d");
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        var ctx = self.falling_canvas.getContext("2d");
+        ctx.clearRect(0, 0, self.falling_canvas.width, self.falling_canvas.height);
 
         //draw the piece
-        for(var y = 0 ; y < this.matrix.tab.length ; y++){
-            for(var x = 0 ; x < this.matrix.tab[y].length ; x++){
+        for(var y = 0 ; y < self.matrix.tab.length ; y++){
+            for(var x = 0 ; x < self.matrix.tab[y].length ; x++){
                 if(this.matrix.tab[y][x] == 1){
-                    var coordX = (this.location[0] + x) * TILE_SIZE;
-                    var coordY = (this.location[1] + y) * TILE_SIZE;
-                    ctx.drawImage(this.tile, coordX, coordY);
+                    var coordX = (self.location[0] + x) * TILE_SIZE;
+                    var coordY = (self.location[1] + y) * TILE_SIZE;
+                    ctx.drawImage(self.tile, coordX, coordY);
                 }
             }
         }
@@ -154,13 +155,13 @@ class Tetrominos{
         var previewCoordY = this.location[1];
         var canFall = true;
         while(canFall){
-            for(var y = 0 ; y < this.matrix.tab.length ; y++){
-                for(var x = 0 ; x < this.matrix.tab[y].length ; x++){
+            for(var y = 0 ; y < self.matrix.tab.length ; y++){
+                for(var x = 0 ; x < self.matrix.tab[y].length ; x++){
                     if(this.matrix.tab[y][x] == 1){
                         var coordX = previewCoordX + x;
                         var coordY = previewCoordY + y + 1;
-                        if(this.game.voxel.get(coordX, coordY) != null ||
-                            !this.game.voxel.isInside(coordX, coordY)){
+                        if(self.game.voxel.get(coordX, coordY) != null ||
+                            !self.game.voxel.isInside(coordX, coordY)){
                             canFall = false;
                         }
                     }
@@ -172,42 +173,40 @@ class Tetrominos{
 
         //draw preview
         ctx.globalAlpha = 0.5;
-        for(var y = 0 ; y < this.matrix.tab.length ; y++){
-            for(var x = 0 ; x < this.matrix.tab[y].length ; x++){
-                if(this.matrix.tab[y][x] == 1){
+        for(var y = 0 ; y < self.matrix.tab.length ; y++){
+            for(var x = 0 ; x < self.matrix.tab[y].length ; x++){
+                if(self.matrix.tab[y][x] == 1){
                     var coordX = (previewCoordX + x) * TILE_SIZE;
                     var coordY = (previewCoordY + y) * TILE_SIZE;
-                    ctx.drawImage(this.tile, coordX, coordY);
+                    ctx.drawImage(self.tile, coordX, coordY);
                 }
             }
         }
         ctx.globalAlpha = 1.0;
 
         //draw next preview
-        var next_elem = document.getElementById("tetris_next_tetrominos");
-        var next_ctx = next_elem.getContext("2d");
-        next_ctx.clearRect(0, 0, next_elem.width, next_elem.height);
-        for(var y = 0 ; y < this.next.matrix.tab.length ; y++){
-            for(var x = 0 ; x < this.next.matrix.tab[y].length ; x++){
-                if(this.next.matrix.tab[y][x] == 1){
-                    var nextCoordX = (x+(4-this.next.matrix.tab.length)/2)*TILE_SIZE;
-                    var nextCoordY = (y+(4-this.next.matrix.tab[y].length)/2)*TILE_SIZE;
-                    next_ctx.drawImage(this.next.tile, nextCoordX, nextCoordY);
+        var next_ctx = self.next_canvas.getContext("2d");
+        next_ctx.clearRect(0, 0, self.next_canvas.width, self.next_canvas.height);
+        for(var y = 0 ; y < self.next.matrix.tab.length ; y++){
+            for(var x = 0 ; x < self.next.matrix.tab[y].length ; x++){
+                if(self.next.matrix.tab[y][x] == 1){
+                    var nextCoordX = (x+(4-self.next.matrix.tab.length)/2)*TILE_SIZE;
+                    var nextCoordY = (y+(4-self.next.matrix.tab[y].length)/2)*TILE_SIZE;
+                    next_ctx.drawImage(self.next.tile, nextCoordX, nextCoordY);
                 }
             }
         }
 
         //draw stored preview
         if(this.swap != null){
-            var stored_elem = document.getElementById("tetris_stored_tetrominos");
-            var stored_ctx = stored_elem.getContext("2d");
-            stored_ctx.clearRect(0, 0, stored_elem.width, stored_elem.height);
-            for(var y = 0 ; y < this.swap.matrix.tab.length ; y++){
-                for(var x = 0 ; x < this.swap.matrix.tab[y].length ; x++){
-                    if(this.swap.matrix.tab[y][x] == 1){
-                        var swapCoordX = (x+(4-this.swap.matrix.tab.length)/2)*TILE_SIZE;
-                        var swapCoordY = (y+(4-this.swap.matrix.tab[y].length)/2)*TILE_SIZE;
-                        stored_ctx.drawImage(this.swap.tile, swapCoordX, swapCoordY);
+            var stored_ctx = self.hold_canvas.getContext("2d");
+            stored_ctx.clearRect(0, 0, self.hold_canvas.width, self.hold_canvas.height);
+            for(var y = 0 ; y < self.swap.matrix.tab.length ; y++){
+                for(var x = 0 ; x < self.swap.matrix.tab[y].length ; x++){
+                    if(self.swap.matrix.tab[y][x] == 1){
+                        var swapCoordX = (x+(4-self.swap.matrix.tab.length)/2)*TILE_SIZE;
+                        var swapCoordY = (y+(4-self.swap.matrix.tab[y].length)/2)*TILE_SIZE;
+                        stored_ctx.drawImage(self.swap.tile, swapCoordX, swapCoordY);
                     }
                 }
             }
@@ -215,92 +214,92 @@ class Tetrominos{
 
     }
 
-    lock(){
-        this.loader.getEffect(EFFECT_PLACE).play();
+    lock(self){
+        self.loader.getEffect(EFFECT_PLACE).play();
         var corner_count = 0;
-        for(var y = 0 ; y < this.matrix.tab.length ; y++){
-            for(var x = 0 ; x < this.matrix.tab[y].length ; x++){
-                if(this.matrix.tab[y][x] == 1){
-                    var coordX = this.location[0] + x;
-                    var coordY = this.location[1] + y;
+        for(var y = 0 ; y < self.matrix.tab.length ; y++){
+            for(var x = 0 ; x < self.matrix.tab[y].length ; x++){
+                if(self.matrix.tab[y][x] == 1){
+                    var coordX = self.location[0] + x;
+                    var coordY = self.location[1] + y;
                     //if there is already a piece
-                    if(this.game.voxel.get(coordX, coordY) != null){
+                    if(self.game.voxel.get(coordX, coordY) != null){
                         //stop the gravity & check loop
-                        clearInterval(this.gravityInterval);
-                        clearTimeout(this.checkTimeout);
+                        clearInterval(self.gravityInterval);
+                        clearTimeout(self.checkTimeout);
                         //end the game
-                        this.game.end();
+                        self.game.end();
                         return;
                     }else{
                         //put the piece
-                        this.game.voxel.set(this.location[0]+x, this.location[1]+y, this.tile);
+                        self.game.voxel.set(self.location[0]+x, self.location[1]+y, self.tile);
                     }
-                }else if(this.name == "T" && x != 1 && y != 1){ //if the piece is a T and only if it's a corner
-                    var coordX = this.location[0] + x;
-                    var coordY = this.location[1] + y;
-                    if(this.game.voxel.get(coordX, coordY) != null || !this.game.voxel.isInside(coordX, coordY)){
+                }else if(self.name == "T" && x != 1 && y != 1){ //if the piece is a T and only if it's a corner
+                    var coordX = self.location[0] + x;
+                    var coordY = self.location[1] + y;
+                    if(self.game.voxel.get(coordX, coordY) != null || !self.game.voxel.isInside(coordX, coordY)){
                         corner_count++;
                     }
                 }
             }
         }
-        this.lastActionWasTSpin = corner_count >= 3 && this.hasRotated;
+        self.lastActionWasTSpin = corner_count >= 3 && self.hasRotated;
     }
 
-    rotateLeft(){
-        var res = findRotation(this, mod(this.rotationState-1, 4), false);
+    rotateLeft(self){
+        var res = findRotation(self, mod(this.rotationState-1, 4), false);
         if(res == null)return;
-        this.hasRotated = true;
-        this.loader.getEffect(EFFECT_MOVEMENT).play();
-        this.lastRotationHasWallKick = res[1] != 0 || res[2] != 0;
-        this.cancelLockTimeout();
-        this.resetLockTimeout();
-        this.rotationState = mod(this.rotationState-1, 4);
-        this.matrix = res[0];
-        this.location[0] += res[1];
-        this.location[1] += res[2];
-        this.draw();
+        self.hasRotated = true;
+        self.loader.getEffect(EFFECT_MOVEMENT).play();
+        self.lastRotationHasWallKick = res[1] != 0 || res[2] != 0;
+        self.cancelLockTimeout(self);
+        self.resetLockTimeout(self);
+        self.rotationState = mod(this.rotationState-1, 4);
+        self.matrix = res[0];
+        self.location[0] += res[1];
+        self.location[1] += res[2];
+        self.draw(self);
     }
 
-    rotateRight(){
-        var res = findRotation(this, mod(this.rotationState+1, 4), true);
+    rotateRight(self){
+        var res = findRotation(self, mod(this.rotationState+1, 4), true);
         if(res == null)return;
-        this.hasRotated = true;
-        this.loader.getEffect(EFFECT_MOVEMENT).play();
-        this.lastRotationHasWallKick = res[1] != 0 || res[2] != 0;
-        this.cancelLockTimeout();
-        this.resetLockTimeout();
-        this.rotationState = mod(this.rotationState+1, 4);
-        this.matrix = res[0];
-        this.location[0] += res[1];
-        this.location[1] += res[2];
-        this.draw();
+        self.hasRotated = true;
+        self.loader.getEffect(EFFECT_MOVEMENT).play();
+        self.lastRotationHasWallKick = res[1] != 0 || res[2] != 0;
+        self.cancelLockTimeout(self);
+        self.resetLockTimeout(self);
+        self.rotationState = mod(this.rotationState+1, 4);
+        self.matrix = res[0];
+        self.location[0] += res[1];
+        self.location[1] += res[2];
+        self.draw(self);
     }
 
-    move(dx = 0 , dy = 0, sound = true){
-        if(!this.isOOB(dx, dy) && !this.alreadyContainsData(dx, dy)){
+    move(dx = 0 , dy = 0, sound = true, self){
+        if(!self.isOOB(dx, dy, null, self) && !self.alreadyContainsData(dx, dy, null, self)){
             if(sound){
-                this.loader.getEffect(EFFECT_MOVEMENT).play();
-                this.cancelLockTimeout();
-                this.resetLockTimeout();
+                self.loader.getEffect(EFFECT_MOVEMENT).play();
+                self.cancelLockTimeout(self);
+                self.resetLockTimeout(self);
             }
-            this.hasRotated = false;
-            this.location[0] += dx;
-            this.location[1] += dy;
-            this.draw();
+            self.hasRotated = false;
+            self.location[0] += dx;
+            self.location[1] += dy;
+            self.draw(self);
             return true;
         }
         return false;
     }
 
-    isOOB(dx, dy, mat = null){
-        if(mat == null)mat = this.matrix;
+    isOOB(dx, dy, mat = null, self){
+        if(mat == null)mat = self.matrix;
         for(var y = 0 ; y < mat.tab.length ; y++){
             for(var x = 0 ; x < mat.tab[y].length ; x++){
                 if(mat.tab[y][x] == 1){
-                    var coordX = this.location[0] + x + dx;
-                    var coordY = this.location[1] + y + dy;
-                    if(!this.game.voxel.isInside(coordX, coordY) && !this.game.voxel.isOutsideTop(coordX, coordY)){
+                    var coordX = self.location[0] + x + dx;
+                    var coordY = self.location[1] + y + dy;
+                    if(!self.game.voxel.isInside(coordX, coordY) && !self.game.voxel.isOutsideTop(coordX, coordY)){
                         return true;
                     }
                 }
@@ -309,14 +308,14 @@ class Tetrominos{
         return false;
     }
 
-    alreadyContainsData(dx, dy, mat = null){
-        if(mat == null)mat = this.matrix;
+    alreadyContainsData(dx, dy, mat = null, self){
+        if(mat == null)mat = self.matrix;
         for(var y = 0 ; y < mat.tab.length ; y++){
             for(var x = 0 ; x < mat.tab[y].length ; x++){
                 if(mat.tab[y][x] == 1){
-                    var coordX = this.location[0] + x + dx;
-                    var coordY = this.location[1] + y + dy;
-                    if(this.game.voxel.get(coordX, coordY) != null){
+                    var coordX = self.location[0] + x + dx;
+                    var coordY = self.location[1] + y + dy;
+                    if(self.game.voxel.get(coordX, coordY) != null){
                         return true;
                     }
                 }
@@ -327,9 +326,9 @@ class Tetrominos{
 
 
 
-    hardDrop(){
-        this.loader.getEffect(EFFECT_HARD_DROP).play();
-        while(this.move(0, 1, false)){}
-        this.checkLock();
+    hardDrop(self){
+        self.loader.getEffect(EFFECT_HARD_DROP).play();
+        while(self.move(0, 1, false, self)){}
+        self.checkLock(true, self);
     }
 }
