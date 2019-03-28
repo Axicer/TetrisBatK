@@ -1,3 +1,4 @@
+
 # Tetris® School
 
 ![Image of Tetris® School](https://github.com/Axicer/TetrisBatK/raw/master/res/icons/logo.png)
@@ -41,6 +42,23 @@ This means that __Tetris® School__ uses:
 
  For more details, please look at the official guideline <https://tetris.fandom.com/wiki/Tetris_Guideline>
 
+## How it works
+The game is composed of __2__  canvas align one on top of the other and a game script:
+- __tetrominos canvas__ which contains the falling tetrominos
+- __voxel canvas__ which contain all the voxels already fallen
+
+The tetrominos scripts where all operations on the tetrominos canvas is done (__rotation__, __wall kicks__, __DAS__).
+It also contains manage __death detection__, __scoring script__, __tetrominos randomizer__ and __hold and ghost piece__.
+
+The voxel canvas manage __line clear__, __voxel display__ and background.
+
+game script manage all the canvases and make the link between each parts of the game. 
+
+Math folder contains __rotation kick algorithm__ and __matrix rotation system__.
+
+Util folder contains __keyboard handler__ for __DAS__, and __Loader script__ for the __"before game" loading screen__.
+
+And finally the controller is __starting all the business__ and manage the __legal notice screen__.
 
 ## Legal copyrights
 Tetris ® & © 1985~2019 Tetris Holding, LLC.  
@@ -57,4 +75,4 @@ All Rights Reserved.
 
 __The Tetris Company__ website: <https://tetris.com>  
 __Tetris®__ official Wikipedia: <https://tetris.fandom.com/wiki/Tetris_Wiki>  
-__UIT of Montpellier/Sète__ website: <https://iut-montpellier-sete.edu.umontpellier.fr/>  
+__UIT of Montpellier/Sète__ website: <https://iut-montpellier-sete.edu.umontpellier.fr/>
